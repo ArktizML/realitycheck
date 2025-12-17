@@ -1,31 +1,11 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from app.api.events import router
 
-# Create FastAPI application instance
-app = FastAPI()
+app = FastAPI(title="RealityCheck API")
 
-# Pydantic model (input schema)
-class EventCreate(BaseModel):
-    title: str
-    description: str
-    expectation: int
-    reality: int
+# include all routes from app/api/events.py
+app.include_router(router)
 
-
-# Health check endpoint
 @app.get("/health")
-def health_check():
+def health():
     return {"status": "ok"}
-
-# Create event endpoint
-@app.post("/events")
-def create_event(event: EventCreate):
-    gap = event.reality - event.expectation
-
-    return {
-        "title": event.title,
-        "description": event.description,
-        "expectation": event.expectation,
-        "reality": event.reality,
-        "gap": gap
-    }
