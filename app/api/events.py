@@ -1,5 +1,5 @@
-from fastapi import APIRouter
-from app.services.event_service import create_event, get_all_events
+from fastapi import APIRouter, HTTPException
+from app.services.event_service import create_event, get_all_events, delete_event
 from app.schemas.event import EventCreate, EventOut
 
 router = APIRouter(prefix="/events")
@@ -13,3 +13,11 @@ def create_event_endpoint(event: EventCreate):
 @router.get("/", response_model=list[EventOut])
 def get_events_endpoint():
     return get_all_events()
+
+@router.delete("/{event_id}")
+def delete_event_endpoint(event_id: int):
+    success = delete_event(event_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Event not found")
+    
+    return {"message": "Event deleted successfully"}

@@ -6,6 +6,7 @@ class EventCreate(BaseModel):
     reality: int
 
 class EventOut(BaseModel):
+    id: int
     title: str
     expectation: int
     reality: int
