@@ -1,3 +1,4 @@
+from typing import Optional
 from app.schemas.event import EventCreate, EventOut
 from .storage import EVENTS, CURRENT_ID
 
@@ -27,3 +28,19 @@ def delete_event(event_id: int) -> bool:
             EVENTS.pop(index)
             return True
     return False
+
+def update_event(event_id: int, updated_event: EventCreate) -> Optional[EventOut]:
+    for index, event in enumerate(EVENTS):
+        if event.id == event_id:
+            gap = calculate_gap(updated_event.expectation, updated_event.reality)
+            updated = EventOut(
+                id=event_id,
+                title=updated_event.title,
+                expectation=updated_event.expectation,
+                reality=updated_event.reality,
+                gap=gap
+            )
+
+            EVENTS[index] = updated
+            return updated
+    return None
