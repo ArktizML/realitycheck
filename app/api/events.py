@@ -30,3 +30,11 @@ def update_event_endpoint(event_id: int, event: EventCreate):
         raise HTTPException(status_code=404, detail="Event not found")
 
     return updated
+
+@router.get("/{event_id}", response_model=EventOut)
+def show_single_event(event_id: int):
+    events = get_all_events()
+    for event in events:
+        if event.id == event_id:
+            return event
+    raise HTTPException(status_code=404, detail="Event not found")
