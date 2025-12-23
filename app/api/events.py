@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.services.event_service import create_event, get_all_events, delete_event, update_event
+from app.services.event_service import create_event, get_all_events, delete_event, update_event, show_single_event
 from app.schemas.event import EventCreate, EventOut
 
 router = APIRouter(prefix="/events")
@@ -32,9 +32,7 @@ def update_event_endpoint(event_id: int, event: EventCreate):
     return updated
 
 @router.get("/{event_id}", response_model=EventOut)
-def show_single_event(event_id: int):
-    events = get_all_events()
-    for event in events:
-        if event.id == event_id:
-            return event
-    raise HTTPException(status_code=404, detail="Event not found")
+def single_event_endpoint(event_id: int):
+    event = show_single_event(event_id)
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
