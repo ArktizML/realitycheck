@@ -17,6 +17,8 @@ class EventCreate(BaseModel):
 
         if expectation is not None and reality > expectation * 3:
             raise ValueError("Reality is unrealistically higher than expectation.")
+        
+        return reality
 
 class EventOut(BaseModel):
     id: int
