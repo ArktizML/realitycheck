@@ -20,3 +20,14 @@ def test_event_create_reality_too_extreme():
             expectation=5,
             reality=20
         )
+
+def test_event_create_reality_too_high():
+    import pytest
+    from app.schemas.event import EventCreate
+
+    with pytest.raises(ValueError):
+        EventCreate(
+            title="Too optimistic",
+            expectation=10,
+            reality=100
+        )
