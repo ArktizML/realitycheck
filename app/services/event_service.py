@@ -1,24 +1,28 @@
 from typing import Optional
 from fastapi import HTTPException
-from app.schemas.event import EventCreate, EventOut
+from app.schemas.event import EventCreate, EventOut, Event
 from .storage import EVENTS, CURRENT_ID
+from app.database import get_db
 
 def calculate_gap(expectation: int, reality: int) -> int:
     return reality - expectation
 
 def create_event(event: EventCreate) -> EventOut:
     gap = calculate_gap(event.expectation, event.reality)
-    global CURRENT_ID
-    event_out = EventOut(
-        id=CURRENT_ID,
+
+    db_event = Event(
         title=event.title,
         expectation=event.expectation,
         reality=event.reality,
         gap=gap
     )
-    EVENTS.append(event_out)
-    CURRENT_ID += 1
-    return event_out
+
+    with get_db() as db:
+        db.add(db_event)
+        db.commit()
+        db.refresh(db_event)
+
+    return EventOut.model_validate(db_event)
 
 def get_all_events() -> list[EventOut]:
     return EVENTS
