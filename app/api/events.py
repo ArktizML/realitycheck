@@ -1,38 +1,52 @@
-from fastapi import APIRouter, HTTPException
-from app.services.event_service import create_event, get_all_events, delete_event, update_event, show_single_event
+from fastapi import APIRouter, HTTPException, Depends
+from app.services.event_service import create_event, delete_event_service, update_event_service, show_event
+from sqlalchemy.orm import Session
+from app.database import get_db
 from app.schemas.event import EventCreate, EventOut
+from app.db.event_repository import get_all_events, get_event_by_id
 
 router = APIRouter(prefix="/events")
 
 
 @router.post("/", response_model=EventOut)
-def create_event_endpoint(event: EventCreate):
-    return create_event(event)
+def create_event_endpoint(
+    event: EventCreate,
+    db: Session = Depends(get_db),
+):
+    return create_event(db, event)
 
+@router.get("/{event_id}", response_model=EventOut)
+def get_event(event_id: int, db: Session = Depends(get_db)):
+    event = get_event_by_id(db, event_id)
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+    return event
 
 @router.get("/", response_model=list[EventOut])
-def get_events_endpoint():
-    return get_all_events()
+def get_events(db: Session = Depends(get_db)):
+    return get_all_events(db)
 
-@router.delete("/{event_id}")
-def delete_event_endpoint(event_id: int):
-    success = delete_event(event_id)
-    if not success:
+
+
+@router.delete("/{event_id}", status_code=204)
+def delete_event_endpoint(event_id: int, db: Session = Depends(get_db)):
+    deleted = delete_event_service(db, event_id)
+    if not deleted:
         raise HTTPException(status_code=404, detail="Event not found")
-    
-    return {"message": "Event deleted successfully"}
 
 @router.put("/{event_id}", response_model=EventOut)
-def update_event_endpoint(event_id: int, event: EventCreate):
-    updated = update_event(event_id, event)
-
+def update_event_endpoint(
+    event_id: int,
+    event: EventCreate,
+    db: Session = Depends(get_db),
+):
+    updated = update_event_service(db, event_id, event)
     if not updated:
         raise HTTPException(status_code=404, detail="Event not found")
-
     return updated
 
 @router.get("/{event_id}", response_model=EventOut)
-def single_event_endpoint(event_id: int):
-    event = show_single_event(event_id)
+def single_event_endpoint(event_id: int, db: Session = Depends(get_db)):
+    event = show_event(db, event_id)
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")

@@ -14,7 +14,7 @@ SessionLocal = sessionmaker(bind=engine)
 class Base(DeclarativeBase):
     pass
 
-@contextmanager
+
 def get_db():
     db = SessionLocal()
     try:

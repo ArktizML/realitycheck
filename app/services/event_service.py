@@ -1,58 +1,59 @@
-from typing import Optional
-from fastapi import HTTPException
-from app.schemas.event import EventCreate, EventOut, Event
-from .storage import EVENTS, CURRENT_ID
+from app.schemas.event import EventCreate, EventOut
+from app.models.event import Event
 from app.database import get_db
+from sqlalchemy.orm import Session
+from app.db.event_repository import get_all_events, get_event_by_id, update_event, delete_event
+from app.schemas.event import EventOut
+
+def list_events(db: Session) -> list[EventOut]:
+    events = get_all_events(db)
+    return [EventOut.model_validate(e) for e in events]
+
+def show_event(db: Session, event_id: int) -> EventOut | None:
+    event = get_event_by_id(db, event_id)
+    if not event:
+        return None
+    return EventOut.model_validate(event)
 
 def calculate_gap(expectation: int, reality: int) -> int:
     return reality - expectation
 
-def create_event(event: EventCreate) -> EventOut:
-    gap = calculate_gap(event.expectation, event.reality)
+
+def create_event(db: Session, event: EventCreate) -> EventOut:
+    gap = event.reality - event.expectation
 
     db_event = Event(
         title=event.title,
         expectation=event.expectation,
         reality=event.reality,
-        gap=gap
+        gap=gap,
     )
 
-    with get_db() as db:
-        db.add(db_event)
-        db.commit()
-        db.refresh(db_event)
+    db.add(db_event)
+    db.commit()
+    db.refresh(db_event)
 
     return EventOut.model_validate(db_event)
 
-def get_all_events() -> list[EventOut]:
-    return EVENTS
 
-def delete_event(event_id: int) -> bool:
-    for index, event in enumerate(EVENTS):
-        if event.id == event_id:
-            EVENTS.pop(index)
-            return True
-    return False
+def delete_event_service(db: Session, event_id: int) -> bool:
+    return delete_event(db, event_id)
 
-def update_event(event_id: int, updated_event: EventCreate) -> Optional[EventOut]:
-    for index, event in enumerate(EVENTS):
-        if event.id == event_id:
-            gap = calculate_gap(updated_event.expectation, updated_event.reality)
-            updated = EventOut(
-                id=event_id,
-                title=updated_event.title,
-                expectation=updated_event.expectation,
-                reality=updated_event.reality,
-                gap=gap
-            )
+def update_event_service(db: Session, event_id: int, data: EventCreate) -> EventOut | None:
+    gap = data.reality - data.expectation
 
-            EVENTS[index] = updated
-            return updated
-    return None
+    event = update_event(
+        db,
+        event_id,
+        {
+            "title": data.title,
+            "expectation": data.expectation,
+            "reality": data.reality,
+            "gap": gap,
+        },
+    )
 
-def show_single_event(event_id: int):
-    events = get_all_events()
-    for event in events:
-        if event.id == event_id:
-            return event
-    raise HTTPException(status_code=404, detail="Event not found")
+    if not event:
+        return None
+
+    return EventOut.model_validate(event)
