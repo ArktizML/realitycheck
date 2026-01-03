@@ -64,3 +64,21 @@ def test_create_and_get_event(client):
 
     get_response = client.get(f"/events/{data['id']}")
     assert get_response.status_code == 200
+
+def test_delete_event(client):
+    response = client.post(
+        "/events/",
+        json={
+            "title": "To delete",
+            "expectation": 5,
+            "reality": 10
+        }
+    )
+
+    event_id = response.json()["id"]
+
+    delete_response = client.delete(f"/events/{event_id}")
+    assert delete_response.status_code == 200
+
+    get_response = client.get(f"/events/{event_id}")
+    assert get_response.status_code == 404

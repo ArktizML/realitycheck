@@ -1,5 +1,6 @@
 from pydantic import BaseModel, field_validator
 from app.models.event import Title, Expectation, Reality
+from datetime import datetime
 
 class EventCreate(BaseModel):
     title: Title
@@ -22,6 +23,7 @@ class EventOut(BaseModel):
     expectation: int
     reality: int
     gap: int
+    created_at: datetime
 
     model_config = {
         "from_attributes": True

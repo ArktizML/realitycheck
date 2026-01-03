@@ -1,8 +1,9 @@
 from pydantic import BaseModel, Field, field_validator
 from typing_extensions import Annotated
-from sqlalchemy import Integer, String
+from sqlalchemy import Integer, String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
 from app.database import Base
+from datetime import datetime
 
 class Event(Base):
     __tablename__ = "events"
@@ -12,6 +13,7 @@ class Event(Base):
     expectation: Mapped[int] = mapped_column(Integer, nullable=False)
     reality: Mapped[int] = mapped_column(Integer, nullable=False)
     gap: Mapped[int] = mapped_column(Integer, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 Expectation = Annotated[int, Field(ge=0, le=100)]
 Reality = Annotated[int, Field(ge=0, le=300)]
