@@ -17,7 +17,8 @@ class EventCreate(BaseModel):
         
         return reality
 
-class EventOut(BaseModel):
+
+class EventRead(BaseModel):
     id: int
     title: str
     expectation: int
@@ -25,6 +26,6 @@ class EventOut(BaseModel):
     gap: int
     created_at: datetime
 
-    model_config = {
+    model_config ={
         "from_attributes": True
     }
