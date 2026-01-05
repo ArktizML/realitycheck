@@ -29,3 +29,14 @@ class EventRead(BaseModel):
     model_config ={
         "from_attributes": True
     }
+
+class EventStats(BaseModel):
+    total_events: int
+    average_gap: float
+    max_gap: int
+    min_gap: int
+    created_at: datetime
+
+    model_config ={
+        "from_attributes": True
+    }

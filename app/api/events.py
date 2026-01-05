@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
-from app.services.event_service import create_event, delete_event_service, update_event_service, show_event
+from app.services.event_service import create_event, delete_event_service, update_event_service, show_event, event_stats
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.schemas.event import EventCreate, EventRead
+from app.schemas.event import EventCreate, EventRead, EventStats
 from app.db.event_repository import get_all_events, get_event_by_id
 
 router = APIRouter(prefix="/events")
@@ -14,6 +14,13 @@ def create_event_endpoint(
     db: Session = Depends(get_db),
 ):
     return create_event(db, event)
+
+@router.get("/stats", response_model=EventStats)
+def event_stats_endpoint(db: Session = Depends(get_db)):
+    eventstats = event_stats(db)
+    if not eventstats:
+        raise HTTPException(status_code=404, detail="No events found")
+    return eventstats
 
 @router.get("/{event_id}", response_model=EventRead)
 def get_event(event_id: int, db: Session = Depends(get_db)):
@@ -44,6 +51,7 @@ def update_event_endpoint(
     if not updated:
         raise HTTPException(status_code=404, detail="Event not found")
     return updated
+
 
 @router.get("/{event_id}", response_model=EventRead)
 def single_event_endpoint(event_id: int, db: Session = Depends(get_db)):
