@@ -1,0 +1,27 @@
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+}
+
+h1 {
+    margin-top: 0;
+}
+
+.event {
+    border-bottom: 1px solid #eee;
+    padding: 12px 0;
+}
+
+.gap {
+    font-weight: bold;
+}
