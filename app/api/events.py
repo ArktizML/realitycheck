@@ -5,7 +5,7 @@ from app.database import get_db
 from app.schemas.event import EventCreate, EventRead, EventStats
 from app.db.event_repository import get_all_events, get_event_by_id
 
-router = APIRouter(prefix="/events")
+router = APIRouter(prefix="/api/events")
 
 
 @router.post("/", response_model=EventRead)

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Add new event</h2>
+
+<form method="post" action="/events/new">
+    <label>
+        Title:
+        <input type="text" name="title" required>
+    </label>
+
+    <label>
+        Expectation:
+        <input type="number" name="expectation" required>
+    </label>
+
+    <label>
+        Reality:
+        <input type="number" name="reality" required>
+    </label>
+
+    <button type="submit">Save</button>
+</form>
+{% endblock %}
