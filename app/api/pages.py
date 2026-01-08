@@ -34,5 +34,5 @@ def create_event_from_form(
     reality: int = Form(...),
     db: Session = Depends(get_db),
 ):
-    create_event(db=db, event =EventCreate(title=title, expectation=expectation, reality=reality))
+    create_event(db=db, event=EventCreate(title=title, expectation=expectation, reality=reality))
     return RedirectResponse(url="/", status_code=HTTP_303_SEE_OTHER)

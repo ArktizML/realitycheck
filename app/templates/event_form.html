@@ -1,24 +1,71 @@
 {% extends "base.html" %}
 
+{% block title %}Events | RealityCheck{% endblock %}
+
 {% block content %}
-<h2>Add new event</h2>
 
-<form method="post" action="/events/new">
-    <label>
-        Title:
-        <input type="text" name="title" required>
-    </label>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
 
-    <label>
-        Expectation:
-        <input type="number" name="expectation" required>
-    </label>
+            <div class="card form-card">
+                <div class="card-body">
+                    <h3 class="mb-4 text-center">
+                        {% if event %}
+                            Edit Event
+                        {% else %}
+                            New Event
+                        {% endif %}
+                    </h3>
 
-    <label>
-        Reality:
-        <input type="number" name="reality" required>
-    </label>
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input
+                                type="text"
+                                name="title"
+                                class="form-control"
+                                value="{{ event.title if event else '' }}"
+                                required
+                            >
+                        </div>
 
-    <button type="submit">Save</button>
-</form>
+                        <div class="mb-3">
+                            <label class="form-label">Expectation</label>
+                            <input
+                                type="number"
+                                name="expectation"
+                                class="form-control"
+                                value="{{ event.expectation if event else '' }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Reality</label>
+                            <input
+                                type="number"
+                                name="reality"
+                                class="form-control"
+                                value="{{ event.reality if event else '' }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                {% if event %}
+                                    Save changes
+                                {% else %}
+                                    Create event
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 {% endblock %}

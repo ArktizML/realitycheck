@@ -1,27 +1,110 @@
 body {
-    font-family: system-ui, -apple-system, sans-serif;
-    background: #f7f7f7;
-    margin: 0;
-    padding: 0;
+    background-color: #0f1115;
+    color: #e5e7eb;
 }
 
-.container {
-    max-width: 800px;
-    margin: 40px auto;
-    background: white;
-    padding: 24px;
-    border-radius: 8px;
+.navbar {
+    background-color: #111827 !important;
 }
 
-h1 {
-    margin-top: 0;
+.card {
+    background-color: #111827;
+    color: #e5e7eb;
+    border: 1px solid #1f2933;
+    border-radius: 12px;
 }
 
-.event {
-    border-bottom: 1px solid #eee;
-    padding: 12px 0;
+.card-title {
+    color: #f9fafb;
 }
 
-.gap {
+a {
+    color: #93c5fd;
+}
+
+a:hover {
+    color: #4f46e5 !important;
+}
+
+.container,
+.container-fluid {
+    background-color: transparent;
+}
+
+.table {
+    color: #e6edf3;
+}
+
+.table th,
+.table td {
+    background-color: transparent !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.event-card {
+    background-color: #1d1c30;
+    color: #eaeaea;
+    border: 1px solid #2c2c2c;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.event-card .card-footer {
+    background-color: #3b37b0;
+    border-top: 1px solid #2c2c2c;
+    color: rgb(180, 180, 180) !important;
+}
+
+.event-card .card-footer a:hover {
+    color: black !important;
+}
+
+.gap-good {
+    color: #4caf50;
     font-weight: bold;
+}
+
+.gap-bad {
+    color: #f44336;
+    font-weight: bold;
+}
+
+.form-card {
+    background-color: #1e1e1e;
+    border: 1px solid #2c2c2c;
+    color: #eaeaea;
+}
+
+.form-card .form-label {
+    color: #bdbdbd;
+    font-weight: 500;
+}
+
+.form-card .form-control {
+    background-color: #121212;
+    border: 1px solid #333;
+    color: #eaeaea;
+}
+
+.form-card .form-control:focus {
+    background-color: #121212;
+    color: #fff;
+    border-color: #4f46e5;
+    box-shadow: none;
+}
+
+.form-card .btn-primary {
+    background-color: #4f46e5;
+    border: none;
+}
+
+.form-card .btn-primary:hover {
+    background-color: #4338ca;
 }
