@@ -27,6 +27,7 @@
                 <div class="card-footer text-muted d-flex justify-content-between">
                     <small>{{ event.created_at.strftime("%Y-%m-%d") }}</small>
                     <div>
+                        <a href="/events/{{ event.id }}/edit" class="btn btn-sm btn-outline-light">✏️ Edit</a>
                         <a href="/events/{{ event.id }}" class="btn btn-sm btn-outline-light">View</a>
                     </div>
                 </div>

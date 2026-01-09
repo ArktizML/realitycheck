@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Events | RealityCheck{% endblock %}
+
+{% block content %}
+<form method="post">
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input
+            type="text"
+            name="title"
+            class="form-control"
+            value="{{ event.title }}"
+            required
+        >
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Expectation</label>
+        <input
+            type="number"
+            name="expectation"
+            class="form-control"
+            value="{{ event.expectation }}"
+            required
+        >
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Reality</label>
+        <input
+            type="number"
+            name="reality"
+            class="form-control"
+            value="{{ event.reality }}"
+            required
+        >
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        💾 Save changes
+    </button>
+
+    <a href="/" class="btn btn-secondary ms-2">
+        Cancel
+    </a>
+</form>
+{% endblock %}
