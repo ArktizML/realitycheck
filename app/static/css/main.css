@@ -108,3 +108,46 @@ a:hover {
 .form-card .btn-primary:hover {
     background-color: #4338ca;
 }
+
+/* DETAIL VIEW */
+
+.event-detail-card {
+    background-color: #1e1e1e;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 24px;
+    color: #eaeaea;
+}
+
+.event-detail-card h2 {
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.event-detail-card .list-group-item {
+    background-color: #262626;
+    border: none;
+    color: #eaeaea;
+    margin-bottom: 8px;
+    border-radius: 8px;
+}
+
+/* GAP STYLES */
+
+.gap-item {
+    font-size: 1.1rem;
+}
+
+.gap-positive {
+    color: #4caf50; /* green */
+    font-weight: 600;
+}
+
+.gap-negative {
+    color: #f44336; /* red */
+    font-weight: 600;
+}
+.gap-neutral {
+    color: #9ca3af; /* gray */
+    font-weight: 600;
+}

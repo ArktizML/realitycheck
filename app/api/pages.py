@@ -7,6 +7,7 @@ from app.database import get_db
 from app.services.event_service import get_all_events, get_event_by_id
 from app.schemas.event import EventCreate
 from app.services.event_service import create_event
+from app.models.event import Event
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
@@ -75,3 +76,32 @@ def update_event_from_form(
     db.commit()
 
     return RedirectResponse("/", status_code=303)
+
+@router.get("/events/{event_id}", response_class=HTMLResponse)
+def event_detail(request: Request, event_id: int, db: Session = Depends(get_db)):
+    event = get_event_by_id(db, event_id)
+
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    return templates.TemplateResponse(
+        "event_detail.html",
+        {
+            "request": request,
+            "event": event
+        }
+    )
+
+@router.post("/events/{event_id}/delete")
+def delete_event_page(
+    event_id: int,
+    db: Session = Depends(get_db)
+):
+    event = db.get(Event, event_id)
+    if not event:
+        raise HTTPException(status_code=404)
+
+    db.delete(event)
+    db.commit()
+
+    return RedirectResponse(url="/", status_code=303)

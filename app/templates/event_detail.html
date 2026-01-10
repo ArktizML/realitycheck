@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}{{ event.title }} | RealityCheck{% endblock %}
+
+{% block content %}
+<div class="container mt-4 event-detail-card p-4">
+    <h2>{{ event.title }}</h2>
+
+    <ul class="list-group mt-3">
+        <li class="list-group-item">
+            <strong>Expectation:</strong> {{ event.expectation }}
+        </li>
+        <li class="list-group-item">
+            <strong>Reality:</strong> {{ event.reality }}
+        </li>
+        <li class="list-group-item gap-item">
+            <strong>Gap:</strong>
+            <span class="{% if event.reality > event.expectation %}gap-negative{% else %}gap-positive{% endif %}">
+        {{ event.reality - event.expectation }}
+    </span>
+</li>
+        <li class="list-group-item">
+            <strong>Created at:</strong> {{ event.created_at }}
+        </li>
+    </ul>
+
+    <div class="mt-4">
+        <a href="/" class="btn btn-outline-light">← Back</a>
+        <form
+        method="post"
+        action="/events/{{ event.id }}/delete"
+        onsubmit="return confirm('Czy na pewno chcesz usunąć ten event?');">
+            <button class="btn btn-danger mt-3">
+                🗑 Usuń event
+            </button>
+        </form>
+    </div>
+    
+</div>
+{% endblock %}
