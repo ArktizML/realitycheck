@@ -51,6 +51,23 @@ a:hover {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.add-card-body {
+    background-color: #0e0d17;
+    opacity: 75%;
+    border-radius: 12px;
+    border: 1px solid #2c2c2c;
+    font-size: 300%;
+    font-weight: lighter;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+
+.add-card-body a {
+    color: #6b7280;
+    text-decoration: none;
+}
 .event-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
