@@ -9,10 +9,15 @@
         <input
             type="text"
             name="title"
-            class="form-control"
+            class="form-control {% if errors and errors.get('title') %}is-invalid{% endif %}"
             value="{{ event.title }}"
             required
         >
+        {% if errors and errors.get("title") %}
+            <div class="invalid-feedback">
+                {{ errors["title"] }}
+            </div>
+        {% endif %}
     </div>
 
     <div class="mb-3">
@@ -20,10 +25,15 @@
         <input
             type="number"
             name="expectation"
-            class="form-control"
+            class="form-control {% if errors and errors.get('expectation') %}is-invalid{% endif %}"
             value="{{ event.expectation }}"
             required
         >
+        {% if errors and errors.get("expectation") %}
+            <div class="invalid-feedback">
+                {{ errors["expectation"] }}
+            </div>
+        {% endif %}
     </div>
 
     <div class="mb-3">
@@ -31,10 +41,15 @@
         <input
             type="number"
             name="reality"
-            class="form-control"
+            class="form-control {% if errors and errors.get('reality') %}is-invalid{% endif %}"
             value="{{ event.reality }}"
             required
         >
+        {% if errors and errors.get("reality") %}
+            <div class="invalid-feedback">
+                {{ errors["reality"] }}
+            </div>
+        {% endif %}
     </div>
 
     <button type="submit" class="btn btn-success">
@@ -45,4 +60,5 @@
         Cancel
     </a>
 </form>
+
 {% endblock %}

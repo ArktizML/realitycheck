@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Request, Form, HTTPException
 from fastapi.templating import Jinja2Templates
+from pydantic import ValidationError
 from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse, HTMLResponse
 from starlette.status import HTTP_303_SEE_OTHER
@@ -30,13 +31,44 @@ def new_event_form(request: Request):
 
 @router.post("/events/new")
 def create_event_from_form(
+    request: Request,
     title: str = Form(...),
     expectation: int = Form(...),
     reality: int = Form(...),
     db: Session = Depends(get_db),
 ):
-    create_event(db=db, event=EventCreate(title=title, expectation=expectation, reality=reality))
-    return RedirectResponse(url="/", status_code=HTTP_303_SEE_OTHER)
+    try:
+        event_data = EventCreate(
+            title=title,
+            expectation=expectation,
+            reality=reality,
+        )
+
+        create_event(db=db, event=event_data)
+
+        return RedirectResponse(url="/", status_code=HTTP_303_SEE_OTHER)
+
+    except ValidationError as e:
+        errors = {}
+
+        for err in e.errors():
+            field = err["loc"][0]
+            message = err["msg"]
+            errors[field] = message
+
+        return templates.TemplateResponse(
+            "event_form.html",
+            {
+                "request": request,
+                "errors": errors,
+                "event": {
+                    "title": title,
+                    "expectation": expectation,
+                    "reality": reality,
+                },
+            },
+            status_code=400,
+        )
 
 @router.get("/events/{event_id}/edit", response_class=HTMLResponse)
 def edit_event_page(
@@ -53,11 +85,13 @@ def edit_event_page(
         {
             "request": request,
             "event": event,
+            "errors": None,
         },
     )
 
 @router.post("/events/{event_id}/edit")
 def update_event_from_form(
+    request: Request,
     event_id: int,
     title: str = Form(...),
     expectation: int = Form(...),
@@ -68,6 +102,41 @@ def update_event_from_form(
     if not event:
         raise HTTPException(status_code=404)
 
+    errors = {}
+
+    if not title.strip():
+        errors["title"] = "Title cannot be empty."
+
+    if len(title) < 3:
+        errors["title"] = "Title cannot be shorter than 3 characters."
+
+    if expectation < 0:
+        errors["expectation"] = "Expectation must be 0 or greater."
+
+    if expectation > 100:
+        errors["expectation"] = "Expectation must be less than 100 characters."
+
+    if reality < 0:
+        errors["reality"] = "Reality must be 0 or greater."
+
+    if reality > 300:
+        errors["reality"] = "Reality must be less than 300 characters."
+
+    if errors:
+        event.title = title
+        event.expectation = expectation
+        event.reality = reality
+
+        return templates.TemplateResponse(
+            "edit_event.html",
+            {
+                "request": request,
+                "event": event,
+                "errors": errors,
+            },
+            status_code=400,
+        )
+
     event.title = title
     event.expectation = expectation
     event.reality = reality
@@ -75,7 +144,7 @@ def update_event_from_form(
 
     db.commit()
 
-    return RedirectResponse("/", status_code=303)
+    return RedirectResponse(url="/", status_code=HTTP_303_SEE_OTHER)
 
 @router.get("/events/{event_id}", response_class=HTMLResponse)
 def event_detail(request: Request, event_id: int, db: Session = Depends(get_db)):
