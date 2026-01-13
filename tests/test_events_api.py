@@ -4,7 +4,7 @@ from app.main import app
 client = TestClient(app)
 
 def test_create_event_endpoint():
-    response = client.post("/events", json={
+    response = client.post("api/events", json={
         "title": "API Event",
         "expectation": 10,
         "reality": 20
