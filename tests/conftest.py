@@ -1,11 +1,11 @@
 import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from fastapi.testclient import TestClient
 
-from app.main import app
 from app.database import Base
 from app.database import get_db
+from app.main import app
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 
@@ -20,16 +20,21 @@ TestingSessionLocal = sessionmaker(
     bind=engine
 )
 
-@pytest.fixture()
+@pytest.fixture
 def db_session():
+    engine = create_engine("sqlite:///:memory:", echo=False)
+
+    import app.models.user
     Base.metadata.create_all(bind=engine)
-    session = TestingSessionLocal()
+
+
+    SessionLocal = sessionmaker(bind=engine)
+    session = SessionLocal()
 
     try:
         yield session
     finally:
         session.close()
-        Base.metadata.drop_all(bind=engine)
 
 @pytest.fixture()
 def client(db_session):
