@@ -9,3 +9,7 @@ class UserRead(BaseModel):
     login: str
 
     model_config = {"from_attributes": True}
+
+class UserLogin(BaseModel):
+    login: str
+    password: str

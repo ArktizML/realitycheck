@@ -23,7 +23,3 @@ def authenticate_user(db: Session, login: str, password: str):
         return None
 
     return user
-
-
-print(User)
-print(type(User))
