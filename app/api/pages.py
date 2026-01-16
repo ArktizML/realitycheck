@@ -9,24 +9,41 @@ from app.services.event_service import get_all_events, get_event_by_id
 from app.schemas.event import EventCreate
 from app.services.event_service import create_event
 from app.models.event import Event
+from app.services.auth_service import authenticate_user, create_user
+from app.security.jwt import create_access_token
+from app.schemas.user import UserCreate
+from app.models.user import User
+from app.utils.auth import get_user_for_templates
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
 
+
+
 @router.get("/")
 def home(request: Request, db: Session = Depends(get_db)):
-    events = get_all_events(db)
+
+    user = get_user_for_templates(request, db)
+
     return templates.TemplateResponse(
         "events.html",
-        {"request": request, "events": events},
+        {
+            "request": request,
+            "current_user": user,
+        }
     )
 
 @router.get("/events/new")
-def new_event_form(request: Request):
+def new_event_form(request: Request, db: Session = Depends(get_db)):
+    user = get_user_for_templates(request, db)
+
     return templates.TemplateResponse(
         "event_form.html",
-        {"request": request},
+        {
+            "request": request,
+            "current_user": user,
+        }
     )
 
 @router.post("/events/new")
@@ -56,10 +73,12 @@ def create_event_from_form(
             message = err["msg"]
             errors[field] = message
 
+        user = get_user_for_templates(request, db)
         return templates.TemplateResponse(
             "event_form.html",
             {
                 "request": request,
+                "current_user": user,
                 "errors": errors,
                 "event": {
                     "title": title,
@@ -80,10 +99,12 @@ def edit_event_page(
     if not event:
         raise HTTPException(status_code=404)
 
+    user = get_user_for_templates(request, db)
     return templates.TemplateResponse(
         "edit_event.html",
         {
             "request": request,
+            "current_user": user,
             "event": event,
             "errors": None,
         },
@@ -127,10 +148,12 @@ def update_event_from_form(
         event.expectation = expectation
         event.reality = reality
 
+        user = get_user_for_templates(request, db)
         return templates.TemplateResponse(
             "edit_event.html",
             {
                 "request": request,
+                "current_user": user,
                 "event": event,
                 "errors": errors,
             },
@@ -153,10 +176,12 @@ def event_detail(request: Request, event_id: int, db: Session = Depends(get_db))
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
+    user = get_user_for_templates(request, db)
     return templates.TemplateResponse(
         "event_detail.html",
         {
             "request": request,
+            "current_user": user,
             "event": event
         }
     )
@@ -174,3 +199,79 @@ def delete_event_page(
     db.commit()
 
     return RedirectResponse(url="/", status_code=303)
+
+
+@router.get("/login", response_class=HTMLResponse)
+def login_page(request: Request, db: Session = Depends(get_db)):
+    user = get_user_for_templates(request, db)
+    return templates.TemplateResponse(
+        "login.html",
+        {"request": request,
+         "current_user": user},
+    )
+
+
+@router.post("/login")
+async def login_form(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    form = await request.form()
+    login = form.get("login")
+    password = form.get("password")
+
+    user = authenticate_user(db, login, password)
+    if not user:
+        return templates.TemplateResponse(
+            "login.html",
+            {"request": request, "error": "Invalid credentials"},
+            status_code=401,
+        )
+
+    token = create_access_token({"sub": str(user.id)})
+
+    response = RedirectResponse("/", status_code=303)
+    response.set_cookie(
+        key="access_token",
+        value=token,
+        httponly=True,
+        samesite="lax"
+    )
+    return response
+
+@router.get("/register", response_class=HTMLResponse)
+def register_page(request: Request):
+    return templates.TemplateResponse(
+        "register.html",
+        {"request": request},
+    )
+
+
+@router.post("/register")
+async def register_form(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    form = await request.form()
+    login = form.get("login")
+    password = form.get("password")
+
+    if db.query(User).filter(User.login == login).first():
+        return templates.TemplateResponse(
+            "register.html",
+            {
+                "request": request,
+                "error": "Login already exists",
+            },
+            status_code=400,
+        )
+
+    create_user(db, UserCreate(login=login, password=password))
+
+    return RedirectResponse("/login", status_code=303)
+
+@router.post("/logout")
+def logout():
+    response = RedirectResponse("/login", status_code=303)
+    response.delete_cookie("access_token")
+    return response
