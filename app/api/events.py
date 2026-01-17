@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas.event import EventCreate, EventRead, EventStats
 from app.db.event_repository import get_all_events, get_event_by_id
+from app.security.dependencies import get_current_user
+from app.models.user import User
 
 router = APIRouter(prefix="/api/events")
 

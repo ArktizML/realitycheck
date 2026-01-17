@@ -13,7 +13,9 @@ from app.services.auth_service import authenticate_user, create_user
 from app.security.jwt import create_access_token
 from app.schemas.user import UserCreate
 from app.models.user import User
-from app.utils.auth import get_user_for_templates
+from app.utils.auth import get_user_for_templates, get_current_user_from_cookie
+from app.security.dependencies import get_current_user
+
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
@@ -24,15 +26,18 @@ templates = Jinja2Templates(directory="app/templates")
 @router.get("/")
 def home(request: Request, db: Session = Depends(get_db)):
 
-    user = get_user_for_templates(request, db)
+    user = get_current_user_from_cookie(request)
+    events = db.query(Event).filter(Event.user_id == user.id).all()
 
     return templates.TemplateResponse(
-        "events.html",
-        {
-            "request": request,
-            "current_user": user,
-        }
-    )
+            "events.html",
+            {
+                "request": request,
+                "current_user": user,
+                "events": events
+            }
+        )
+
 
 @router.get("/events/new")
 def new_event_form(request: Request, db: Session = Depends(get_db)):
@@ -54,6 +59,7 @@ def create_event_from_form(
     reality: int = Form(...),
     db: Session = Depends(get_db),
 ):
+    user = get_current_user_from_cookie(request)
     try:
         event_data = EventCreate(
             title=title,
@@ -61,7 +67,7 @@ def create_event_from_form(
             reality=reality,
         )
 
-        create_event(db=db, event=event_data)
+        create_event(db=db, event=event_data, user=user)
 
         return RedirectResponse(url="/", status_code=HTTP_303_SEE_OTHER)
 

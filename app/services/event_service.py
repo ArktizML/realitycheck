@@ -5,6 +5,10 @@ from app.models.event import Event
 from app.database import get_db
 from sqlalchemy.orm import Session
 from app.db.event_repository import get_all_events, get_event_by_id, update_event, delete_event
+from app.security.dependencies import get_current_user
+from app.security.jwt import create_access_token
+from app.models.user import User
+
 
 def list_events(db: Session) -> list[EventRead]:
     events = get_all_events(db)
@@ -20,7 +24,7 @@ def calculate_gap(expectation: int, reality: int) -> int:
     return reality - expectation
 
 
-def create_event(db: Session, event: EventCreate) -> EventRead:
+def create_event(db: Session, event: EventCreate, user: User) -> EventRead:
     gap = event.reality - event.expectation
 
     db_event = Event(
@@ -28,6 +32,7 @@ def create_event(db: Session, event: EventCreate) -> EventRead:
         expectation=event.expectation,
         reality=event.reality,
         gap=gap,
+        user_id=user.id
     )
 
     db.add(db_event)
