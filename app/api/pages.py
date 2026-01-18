@@ -8,6 +8,7 @@ from app.database import get_db
 from app.services.event_service import get_all_events, get_event_by_id
 from app.schemas.event import EventCreate
 from app.services.event_service import create_event
+from app.db.event_repository import delete_event, update_event
 from app.models.event import Event
 from app.services.auth_service import authenticate_user, create_user
 from app.security.jwt import create_access_token
@@ -23,20 +24,38 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 
-@router.get("/")
-def home(request: Request, db: Session = Depends(get_db)):
+@router.get("/", response_class=HTMLResponse)
+def home(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    user = get_user_for_templates(request, db)
 
-    user = get_current_user_from_cookie(request)
-    events = db.query(Event).filter(Event.user_id == user.id).all()
-
-    return templates.TemplateResponse(
-            "events.html",
+    if not user:
+        return templates.TemplateResponse(
+            "landing.html",
             {
                 "request": request,
-                "current_user": user,
-                "events": events
-            }
+                "current_user": None,
+            },
         )
+
+    events = (
+        db.query(Event)
+        .filter(Event.user_id == user.id)
+        .order_by(Event.created_at.desc())
+        .all()
+    )
+
+    return templates.TemplateResponse(
+        "events.html",
+        {
+            "request": request,
+            "current_user": user,
+            "events": events,
+        },
+    )
+
 
 
 @router.get("/events/new")
@@ -101,11 +120,20 @@ def edit_event_page(
     event_id: int,
     db: Session = Depends(get_db),
 ):
-    event = get_event_by_id(db, event_id)
+    user = get_user_for_templates(request, db)
+
+    if not user:
+        return RedirectResponse("/login", status_code=303)
+
+    event = (
+        db.query(Event)
+        .filter(Event.id == event_id, Event.user_id == user.id)
+        .first()
+    )
+
     if not event:
         raise HTTPException(status_code=404)
 
-    user = get_user_for_templates(request, db)
     return templates.TemplateResponse(
         "edit_event.html",
         {
@@ -116,6 +144,7 @@ def edit_event_page(
         },
     )
 
+
 @router.post("/events/{event_id}/edit")
 def update_event_from_form(
     request: Request,
@@ -123,38 +152,33 @@ def update_event_from_form(
     title: str = Form(...),
     expectation: int = Form(...),
     reality: int = Form(...),
+    user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    event = get_event_by_id(db, event_id)
-    if not event:
-        raise HTTPException(status_code=404)
-
     errors = {}
 
     if not title.strip():
         errors["title"] = "Title cannot be empty."
 
     if len(title) < 3:
-        errors["title"] = "Title cannot be shorter than 3 characters."
+        errors["title"] = "Title must be at least 3 characters."
 
-    if expectation < 0:
-        errors["expectation"] = "Expectation must be 0 or greater."
+    if expectation < 0 or expectation > 100:
+        errors["expectation"] = "Expectation must be between 0 and 100."
 
-    if expectation > 100:
-        errors["expectation"] = "Expectation must be less than 100 characters."
+    if reality < 0 or reality > 300:
+        errors["reality"] = "Reality must be between 0 and 300."
 
-    if reality < 0:
-        errors["reality"] = "Reality must be 0 or greater."
+    event = (
+        db.query(Event)
+        .filter(Event.id == event_id, Event.user_id == user.id)
+        .first()
+    )
 
-    if reality > 300:
-        errors["reality"] = "Reality must be less than 300 characters."
+    if not event:
+        raise HTTPException(status_code=404)
 
     if errors:
-        event.title = title
-        event.expectation = expectation
-        event.reality = reality
-
-        user = get_user_for_templates(request, db)
         return templates.TemplateResponse(
             "edit_event.html",
             {
@@ -166,12 +190,18 @@ def update_event_from_form(
             status_code=400,
         )
 
-    event.title = title
-    event.expectation = expectation
-    event.reality = reality
-    event.gap = reality - expectation
+    update_event(
+        db=db,
+        event_id=event_id,
+        title=title,
+        expectation=expectation,
+        reality=reality,
+        user=user,
+    )
 
-    db.commit()
+    return RedirectResponse("/", status_code=303)
+
+
 
     return RedirectResponse(url="/", status_code=HTTP_303_SEE_OTHER)
 
@@ -195,16 +225,11 @@ def event_detail(request: Request, event_id: int, db: Session = Depends(get_db))
 @router.post("/events/{event_id}/delete")
 def delete_event_page(
     event_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
 ):
-    event = db.get(Event, event_id)
-    if not event:
-        raise HTTPException(status_code=404)
-
-    db.delete(event)
-    db.commit()
-
-    return RedirectResponse(url="/", status_code=303)
+    delete_event(db, event_id, user)
+    return RedirectResponse("/", status_code=303)
 
 
 @router.get("/login", response_class=HTMLResponse)
