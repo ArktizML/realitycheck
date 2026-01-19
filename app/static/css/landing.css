@@ -7,6 +7,7 @@
 }
 
 .hero {
+    position: relative;
     text-align: center;
     margin-bottom: 100px;
 }
@@ -98,3 +99,32 @@
     line-height: 1.7;
     margin-bottom: 12px;
 }
+
+.bg-wrapper {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    background: #0b0b0f;
+}
+
+.bg-layer {
+    position: absolute;
+    inset: -50%;
+    background: radial-gradient(
+        circle at center,
+        #1e1b4b,
+        #020617 70%
+    );
+    animation: slowMove 30s linear infinite;
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+@keyframes slowMove {
+    0%   { transform: translate(0, 0); }
+    50%  { transform: translate(5%, 3%); }
+    100% { transform: translate(0, 0); }
+}
+
+
