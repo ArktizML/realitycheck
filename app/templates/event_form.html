@@ -1,77 +1,19 @@
 {% extends "base.html" %}
-
-{% block title %}Events | RealityCheck{% endblock %}
-
 {% block content %}
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
+<form method="post" action="/events/new" class="event-form">
+    <h1>Create Event</h1>
 
-            <div class="card form-card">
-                <div class="card-body">
-                    <h3 class="mb-4 text-center">
-                            New Event
-                    </h3>
+    <label>Title</label>
+    <input name="title" required />
+    {% if errors and errors.title %}
+        <div class="error">{{ errors.title }}</div>
+    {% endif %}
 
-                    <form method="post">
-                        <div class="mb-3">
-                            <label class="form-label">Title</label>
-                                <input
-                                type="text"
-                                name="title"
-                                class="form-control {% if errors and errors.get('title') %}is-invalid{% endif %}"
-                                value="{{ event.title if event else '' }}"
-                                required
-                                >
-                                {% if errors and errors.get("title") %}
-                                <div class="invalid-feedback">
-                                    {{ errors["title"] }}
-                                </div>
-                                {% endif %}
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Expectation</label>
-                            <input
-                                type="number"
-                                name="expectation"
-                                class="form-control {% if errors and errors.get('expectation') %}is-invalid{% endif %}"
-                                value="{{ event.expectation if event else '' }}"
-                                required
-                            >
-                            {% if errors and errors.get("expectation") %}
-                                <div class="invalid-feedback">
-                                    {{ errors["expectation"] }}
-                                </div>
-                            {% endif %}
-                        </div>
-                        <div class="mb-4">
-                            <label class="form-label">Reality</label>
-                            <input
-                                type="number"
-                                name="reality"
-                                class="form-control {% if errors and errors.get('reality') %}is-invalid{% endif %}"
-                                value="{{ event.reality if event else '' }}"
-                                required
-                            >
-                            {% if errors and errors.get("reality") %}
-                                <div class="invalid-feedback">
-                                    {{ errors["reality"] }}
-                                </div>
-                            {% endif %}
-                        </div>
+    <label>Description</label>
+    <textarea name="description"></textarea>
 
+    <button type="submit">Create</button>
+</form>
 
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                    Create event
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
 {% endblock %}

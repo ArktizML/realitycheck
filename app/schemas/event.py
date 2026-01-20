@@ -1,29 +1,18 @@
-from pydantic import BaseModel, field_validator
-from app.models.event import Title, Expectation, Reality
+from pydantic import BaseModel
+from typing import Optional
 from datetime import datetime
 
 class EventCreate(BaseModel):
-    title: Title
-    expectation: Expectation
-    reality: Reality
-
-    @field_validator("reality")
-    @classmethod
-    def reality_not_too_extreme(cls, reality, info):
-        expectation = info.data.get("expectation")
-
-        if expectation is not None and reality > expectation * 3:
-            raise ValueError("Reality is unrealistically higher than expectation.")
-        
-        return reality
+    title: str
+    description: Optional[str] = None
 
 
 class EventRead(BaseModel):
     id: int
     title: str
-    expectation: int
-    reality: int
-    gap: int
+    description: Optional[str]
+    progress: int
+    status: str
     created_at: datetime
 
     model_config ={

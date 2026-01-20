@@ -5,51 +5,44 @@
 {% block content %}
 <form method="post">
     <div class="mb-3">
-        <label class="form-label">Title</label>
-        <input
-            type="text"
-            name="title"
-            class="form-control {% if errors and errors.get('title') %}is-invalid{% endif %}"
-            value="{{ event.title }}"
-            required
-        >
-        {% if errors and errors.get("title") %}
-            <div class="invalid-feedback">
-                {{ errors["title"] }}
-            </div>
-        {% endif %}
+        <h2>{{ event.title }}</h2>
+
+<form method="post" class="event-form">
+    <label>Progress: {{ event.progress }}%</label>
+    <br>
+    <input
+        name="title"
+        value="{{ event.title }}"
+        required
+    />
+    <input
+        type="range"
+        name="progress"
+        min="0"
+        max="100"
+        value="{{ event.progress }}"
+    />
+    {% if event.status == "failed" %}
+        <textarea
+            name="failure_note"
+            placeholder="Why did this fail?"
+        >{{ event.failure_note }}</textarea>
+    {% endif %}
+    <div class="form button-row">
+        <form method="post" action="events/{{ event.id }}/edit">
+        <!-- pola -->
+        <button class="btn btn-primary">Save changes</button>
+        </form>
+        <form method="post" action="/events/{{ event.id }}/done">
+            <button class="form btn btn-secondary">Mark as Done</button>
+        </form>
+        <form method="get" action="/events/{{ event.id }}/fail">
+            <button class="form btn btn-danger">Mark as Failed</button>
+        </form>
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">Expectation</label>
-        <input
-            type="number"
-            name="expectation"
-            class="form-control {% if errors and errors.get('expectation') %}is-invalid{% endif %}"
-            value="{{ event.expectation }}"
-            required
-        >
-        {% if errors and errors.get("expectation") %}
-            <div class="invalid-feedback">
-                {{ errors["expectation"] }}
-            </div>
-        {% endif %}
-    </div>
+</form>
 
-    <div class="mb-3">
-        <label class="form-label">Reality</label>
-        <input
-            type="number"
-            name="reality"
-            class="form-control {% if errors and errors.get('reality') %}is-invalid{% endif %}"
-            value="{{ event.reality }}"
-            required
-        >
-        {% if errors and errors.get("reality") %}
-            <div class="invalid-feedback">
-                {{ errors["reality"] }}
-            </div>
-        {% endif %}
     </div>
 
     <button type="submit" class="btn btn-success">

@@ -74,57 +74,37 @@ def new_event_form(request: Request, db: Session = Depends(get_db)):
 def create_event_from_form(
     request: Request,
     title: str = Form(...),
-    expectation: int = Form(...),
-    reality: int = Form(...),
+    description: str = Form(None),
     db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
 ):
-    user = get_current_user_from_cookie(request)
-    try:
-        event_data = EventCreate(
-            title=title,
-            expectation=expectation,
-            reality=reality,
-        )
-
-        create_event(db=db, event=event_data, user=user)
-
-        return RedirectResponse(url="/", status_code=HTTP_303_SEE_OTHER)
-
-    except ValidationError as e:
-        errors = {}
-
-        for err in e.errors():
-            field = err["loc"][0]
-            message = err["msg"]
-            errors[field] = message
-
-        user = get_user_for_templates(request, db)
+    if len(title.strip()) < 3:
         return templates.TemplateResponse(
-            "event_form.html",
+            "event_from.html",
             {
                 "request": request,
                 "current_user": user,
-                "errors": errors,
-                "event": {
-                    "title": title,
-                    "expectation": expectation,
-                    "reality": reality,
-                },
+                "error": "Title must be at least 3 characters.",
             },
             status_code=400,
         )
+
+    event_data = EventCreate(
+        title=title.strip(),
+        description=description.strip() if description else None,
+    )
+
+    create_event(db, event_data, user)
+    return RedirectResponse("/", status_code=303)
+
 
 @router.get("/events/{event_id}/edit", response_class=HTMLResponse)
 def edit_event_page(
     request: Request,
     event_id: int,
     db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
 ):
-    user = get_user_for_templates(request, db)
-
-    if not user:
-        return RedirectResponse("/login", status_code=303)
-
     event = (
         db.query(Event)
         .filter(Event.id == event_id, Event.user_id == user.id)
@@ -140,70 +120,35 @@ def edit_event_page(
             "request": request,
             "current_user": user,
             "event": event,
-            "errors": None,
         },
     )
 
 
 @router.post("/events/{event_id}/edit")
 def update_event_from_form(
-    request: Request,
     event_id: int,
     title: str = Form(...),
-    expectation: int = Form(...),
-    reality: int = Form(...),
-    user: User = Depends(get_current_user),
+    status: str =Form(default="planned"),
+    progress: int = Form(...),
+    failure_note: str = Form(None),
     db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
 ):
-    errors = {}
-
-    if not title.strip():
-        errors["title"] = "Title cannot be empty."
-
-    if len(title) < 3:
-        errors["title"] = "Title must be at least 3 characters."
-
-    if expectation < 0 or expectation > 100:
-        errors["expectation"] = "Expectation must be between 0 and 100."
-
-    if reality < 0 or reality > 300:
-        errors["reality"] = "Reality must be between 0 and 300."
-
-    event = (
-        db.query(Event)
-        .filter(Event.id == event_id, Event.user_id == user.id)
-        .first()
-    )
-
-    if not event:
-        raise HTTPException(status_code=404)
-
-    if errors:
-        return templates.TemplateResponse(
-            "edit_event.html",
-            {
-                "request": request,
-                "current_user": user,
-                "event": event,
-                "errors": errors,
-            },
-            status_code=400,
-        )
+    if progress < 0 or progress > 100:
+        raise HTTPException(status_code=400, detail="Invalid progress")
 
     update_event(
         db=db,
-        event_id=event_id,
         title=title,
-        expectation=expectation,
-        reality=reality,
+        event_id=event_id,
         user=user,
+        progress=progress,
+        status=status,
+        failure_note=failure_note,
     )
 
     return RedirectResponse("/", status_code=303)
 
-
-
-    return RedirectResponse(url="/", status_code=HTTP_303_SEE_OTHER)
 
 @router.get("/events/{event_id}", response_class=HTMLResponse)
 def event_detail(request: Request, event_id: int, db: Session = Depends(get_db)):
@@ -306,3 +251,90 @@ def logout():
     response = RedirectResponse("/login", status_code=303)
     response.delete_cookie("access_token")
     return response
+
+@router.post("/events/{event_id}/done")
+def mark_event_done(
+    event_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    event = (
+        db.query(Event)
+        .filter(Event.id == event_id, Event.user_id == user.id)
+        .first()
+    )
+
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    event.status = "done"
+    event.progress = 100
+    event.failure_note = None
+
+    db.commit()
+
+    return RedirectResponse("/", status_code=303)
+
+@router.get("/events/{event_id}/fail", response_class=HTMLResponse)
+def fail_event_page(
+    request: Request,
+    event_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    event = (
+        db.query(Event)
+        .filter(Event.id == event_id, Event.user_id == user.id)
+        .first()
+    )
+
+    if not event:
+        raise HTTPException(status_code=404)
+
+    return templates.TemplateResponse(
+        "fail_event.html",
+        {
+            "request": request,
+            "event": event,
+            "current_user": user,
+            "error": None,
+        },
+    )
+
+
+@router.post("/events/{event_id}/fail")
+def mark_event_failed(
+    event_id: int,
+    failure_note: str = Form(...),
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    event = (
+        db.query(Event)
+        .filter(Event.id == event_id, Event.user_id == user.id)
+        .first()
+    )
+
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    if len(failure_note.strip()) < 5:
+        return templates.TemplateResponse(
+            "fail_event.html",
+            {
+                "request": Request,
+                "event": event,
+                "current_user": user,
+                "error": "Failure description is too short.",
+            },
+            status_code=400,
+        )
+
+    event.status = "failed"
+    event.failure_note = failure_note
+    event.progress = 0
+
+    db.commit()
+
+    return RedirectResponse("/", status_code=303)
+

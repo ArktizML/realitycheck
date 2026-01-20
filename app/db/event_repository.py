@@ -14,9 +14,10 @@ def update_event(
     db: Session,
     event_id: int,
     title: str,
-    expectation: int,
-    reality: int,
     user: User,
+    progress: int,
+    status: str,
+    failure_note: str | None = None,
 ):
     event = (
         db.query(Event)
@@ -25,17 +26,19 @@ def update_event(
     )
 
     if not event:
-        raise HTTPException(status_code=404)
+        raise HTTPException(status_code=404, detail="Event not found")
 
     event.title = title
-    event.expectation = expectation
-    event.reality = reality
-    event.gap = reality - expectation
+    event.progress = progress
+    event.status = status
+
+    if status == "failed":
+        event.failure_note = failure_note
 
     db.commit()
     db.refresh(event)
-
     return event
+
 
 
 

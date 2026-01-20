@@ -14,14 +14,14 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ event.title }}</h5>
 
-                    <p class="card-text">
-                        <strong>Expectation:</strong> {{ event.expectation }}<br>
-                        <strong>Reality:</strong> {{ event.reality }}<br>
-                        <strong>Gap:</strong>
-                        <span class="{% if event.gap > 0 %}gap-bad{% else %}gap-good{% endif %}">
-                            {{ event.gap }}
-                        </span>
-                    </p>
+                    <div class="event-header">
+                        <span class="status status-{{ event.status }}">{{ event.status }}</span>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ event.progress }}%"></div>
+                    </div>
+                    <strong>{{ event.progress }}%</strong>
                 </div>
 
                 <div class="card-footer text-muted d-flex justify-content-between">

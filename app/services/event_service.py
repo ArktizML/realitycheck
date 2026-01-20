@@ -24,22 +24,19 @@ def calculate_gap(expectation: int, reality: int) -> int:
     return reality - expectation
 
 
-def create_event(db: Session, event: EventCreate, user: User) -> EventRead:
-    gap = event.reality - event.expectation
-
-    db_event = Event(
-        title=event.title,
-        expectation=event.expectation,
-        reality=event.reality,
-        gap=gap,
-        user_id=user.id
+def create_event(db: Session, event_data: EventCreate, user: User):
+    event = Event(
+        title=event_data.title,
+        description=event_data.description,
+        progress=0,
+        status="planned",
+        user_id=user.id,
     )
 
-    db.add(db_event)
+    db.add(event)
     db.commit()
-    db.refresh(db_event)
-
-    return EventRead.model_validate(db_event)
+    db.refresh(event)
+    return EventRead.model_validate(event)
 
 
 def delete_event_service(db: Session, event_id: int) -> bool:
