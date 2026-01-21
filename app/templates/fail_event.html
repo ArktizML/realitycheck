@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<link rel="stylesheet" href="{{ url_for('static', path='css/fail_event.css') }}">
+<div class="fail-container">
+
+    <h1><strong>Failure Analysis</strong></h1>
+    <p class="subtitle">
+        You didn’t fail. You collected data.
+    </p>
+
+    <div class="event-preview">
+    <div class="preview-header">
+        <h2>{{ event.title }}</h2>
+        <span class="badge failed">FAILED</span>
+    </div>
+
+    <div class="preview-progress">
+        <div class="progress-track">
+            <div class="progress-fill" style="width: {{ event.progress }}%;"></div>
+        </div>
+        <span>{{ event.progress }}%</span>
+    </div>
+
+    <p class="preview-description">
+        {{ event.description or "No description provided." }}
+    </p>
+</div>
+
+
+    <form method="post" class="fail-form">
+
+        <label>What went wrong?</label>
+        <textarea
+            name="failure_note"
+            rows="6"
+            required
+            placeholder="Be honest. This is for you, not for the app."
+        ></textarea>
+
+        <div class="fail-actions">
+            <button type="submit" class="btn-fail">
+                Save & Reflect
+            </button>
+
+            <a href="/events/{{ event.id }}/edit" class="btn-back">
+                Back
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

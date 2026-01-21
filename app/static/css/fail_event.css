@@ -1,0 +1,123 @@
+.fail-container {
+    max-width: 800px;
+    margin: 80px auto;
+    padding: 40px;
+    background: linear-gradient(135deg, #120b2e, #2b124f);
+    border-radius: 20px;
+    color: #e0dfff;
+    box-shadow: 0 0 40px rgb(200, 71, 255);
+}
+
+.fail-container h1 {
+    font-size: 2.2rem;
+    color: #c847ff;
+}
+
+.subtitle {
+    margin-top: 5px;
+    color: #aaa;
+}
+
+.event-preview {
+    background: linear-gradient(135deg, #0f1438, #1b0f3a);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 30px 0;
+    box-shadow: 0 0 25px rgba(122, 92, 255, 0.2);
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.preview-header h2 {
+    font-size: 1.4rem;
+    color: #fff;
+}
+
+.badge.failed {
+    background: rgba(122, 92, 255, 0.2);
+    color: #b08cff;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+}
+
+.preview-progress {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.progress-track {
+    flex: 1;
+    height: 8px;
+    background: #2d2f66;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7a5cff, #b08cff);
+}
+
+.preview-description {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #bbb;
+    line-height: 1.4;
+}
+
+.fail-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #bbb;
+}
+
+.fail-form textarea {
+    width: 100%;
+    background: #0f1438;
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 12px;
+    color: white;
+    font-size: 0.95rem;
+}
+
+.fail-form textarea:focus {
+    outline: none;
+    border-color: #c847ff;
+    box-shadow: 0 0 10px rgb(200, 71, 255);
+}
+
+.fail-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.btn-fail {
+    background: linear-gradient(135deg, #c847ff, #de99fb);
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-back {
+    background: transparent;
+    border: 1px solid #555;
+    padding: 12px 22px;
+    border-radius: 10px;
+    color: #ccc;
+    text-decoration: none;
+}
+
+
