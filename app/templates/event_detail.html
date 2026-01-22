@@ -1,40 +1,71 @@
 {% extends "base.html" %}
-
-{% block title %}{{ event.title }} | RealityCheck{% endblock %}
-
 {% block content %}
-<div class="container mt-4 event-detail-card p-4">
-    <h2>{{ event.title }}</h2>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/event_detail.css') }}">
 
-    <ul class="list-group mt-3">
-        <li class="list-group-item">
-            <strong>Expectation:</strong> {{ event.expectation }}
-        </li>
-        <li class="list-group-item">
-            <strong>Reality:</strong> {{ event.reality }}
-        </li>
-        <li class="list-group-item gap-item">
-            <strong>Gap:</strong>
-            <span class="{% if event.reality > event.expectation %}gap-negative{% else %}gap-positive{% endif %}">
-        {{ event.reality - event.expectation }}
-    </span>
-</li>
-        <li class="list-group-item">
-            <strong>Created at:</strong> {{ event.created_at }}
-        </li>
-    </ul>
+<div class="event-detail-container">
 
-    <div class="mt-4">
-        <a href="/" class="btn btn-outline-light">← Back</a>
-        <form
-        method="post"
-        action="/events/{{ event.id }}/delete"
-        onsubmit="return confirm('Czy na pewno chcesz usunąć ten event?');">
-            <button class="btn btn-danger mt-3">
-                🗑 Usuń event
-            </button>
+    <div class="event-header">
+        <h1>{{ event.title }}</h1>
+        <div class="event-meta">
+            <span class="status {{ event.status }}">{{ event.status|upper }}</span>
+            <span class="date">Created: {{ event.created_at.strftime("%d %b %Y") }}</span>
+        </div>
+    </div>
+
+    <div class="event-progress">
+        <div class="progress-label">
+            Progress: {{ event.progress }}%
+        </div>
+
+        <div class="smart-progress">
+            <div class="smart-progress-fill" style="width: {{ event.progress }}%"></div>
+            <div class="smart-progress-thumb" style="left: {{ event.progress }}%"></div>
+        </div>
+
+        <div class="progress-message">
+            {% if event.progress == 100 %}
+                You did it. This is yours.
+            {% elif event.progress >= 70 %}
+                You're close. Don't stop now.
+            {% elif event.progress >= 30 %}
+                Momentum is building.
+            {% else %}
+                Every start is ugly. Keep going.
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="event-overview">
+        <h2>Event overview</h2>
+
+        <p class="overview-text">
+            {{ event.description or "No description yet." }}
+        </p>
+
+        {% if event.failure_note %}
+        <div class="failure-box">
+            <h3>Last failure analysis</h3>
+            <p>{{ event.failure_note }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="event-actions">
+        <form action="/events/{{ event.id }}/done" method="post">
+            <button class="btn done">Mark as Done</button>
+        </form>
+
+        <form action="/events/{{ event.id }}/failed" method="get">
+            <button class="btn failed">Mark as Failed</button>
+        </form>
+
+        <a href="/events/{{ event.id }}/edit" class="btn edit">Edit</a>
+
+        <form action="/events/{{ event.id }}/delete" method="post">
+            <button class="btn delete">Delete</button>
         </form>
     </div>
-    
+
 </div>
+
 {% endblock %}

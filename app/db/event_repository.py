@@ -17,6 +17,7 @@ def update_event(
     user: User,
     progress: int,
     status: str,
+    description: str,
     failure_note: str | None = None,
 ):
     event = (
@@ -31,6 +32,7 @@ def update_event(
     event.title = title
     event.progress = progress
     event.status = status
+    event.description = description
 
     if status == "failed":
         event.failure_note = failure_note

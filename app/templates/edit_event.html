@@ -23,41 +23,41 @@
         </div>
 
         <div class="progress-wrapper">
-    <label><strong>Progress</strong></label>
+        <label><strong>Progress</strong></label>
 
-    <div class="smart-progress">
-    <div class="smart-progress-fill"
-         id="progressFill"
-         style="width: {{ event.progress }}%;"></div>
+        <div class="smart-progress">
+        <div class="smart-progress-fill"
+             id="progressFill"
+             style="width: {{ event.progress }}%;"></div>
 
-    <input
-        type="range"
-        min="0"
-        max="100"
-        value="{{ event.progress }}"
-        name="progress"
-        id="progressSlider"
-        oninput="updateProgress(this.value)"
-    >
-</div>
+        <input
+            type="range"
+            min="0"
+            max="100"
+            value="{{ event.progress }}"
+            name="progress"
+            id="progressSlider"
+            oninput="updateProgress(this.value)"
+        >
+            </div>
 
-<div class="progress-value">
-    <span id="progressValue">{{ event.progress }}</span>%
-</div>
+            <div class="progress-value">
+                <span id="progressValue">{{ event.progress }}</span>%
+            </div>
 
 
 
-        <div class="actions-row">
-            <button class="btn-primary" type="submit">
-                Save Changes
-            </button>
+            <div class="actions-row">
+                <button class="btn-primary" type="submit">
+                    Save Changes
+                </button>
 
-            <a href="/" class="btn-secondary">
-                Cancel
-            </a>
-        </div>
-
-    </form>
+                <a href="/" class="btn-secondary">
+                    Cancel
+                </a>
+            </div>
+            </div>
+        </form>
 
     <div class="status-panel">
 

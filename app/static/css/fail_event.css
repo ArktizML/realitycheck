@@ -5,7 +5,7 @@
     background: linear-gradient(135deg, #120b2e, #2b124f);
     border-radius: 20px;
     color: #e0dfff;
-    box-shadow: 0 0 40px rgb(200, 71, 255);
+    box-shadow: 0 0 40px rgb(59, 15, 78);
 }
 
 .fail-container h1 {
@@ -92,7 +92,7 @@
 .fail-form textarea:focus {
     outline: none;
     border-color: #c847ff;
-    box-shadow: 0 0 10px rgb(200, 71, 255);
+    box-shadow: 0 0 10px rgb(59, 15, 78);
 }
 
 .fail-actions {

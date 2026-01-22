@@ -7,12 +7,37 @@ body {
     background-color: #111827 !important;
 }
 
-.card {
-    background-color: #111827;
-    color: #e5e7eb;
-    border: 1px solid #1f2933;
-    border-radius: 12px;
+.event-card {
+    background: #0f172a;
+    border-radius: 16px;
+    padding: 18px;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
 }
+
+/* PLANNED */
+.event-card.planned {
+    border: 1px solid rgba(122,92,255,0.4);
+    box-shadow: 0 0 20px rgba(122,92,255,0.15);
+}
+
+/* DONE */
+.event-card.done {
+    border: 1px solid rgba(34,197,94,0.5);
+    box-shadow: 0 0 25px rgba(34,197,94,0.25);
+}
+
+/* FAILED */
+.event-card.failed {
+    border: 1px solid rgba(239,68,68,0.5);
+    box-shadow: 0 0 25px rgba(239,68,68,0.25);
+}
+
+.event-card:hover {
+    transform: translateY(-4px) scale(1.01);
+}
+
 
 .card-title {
     color: #f9fafb;
@@ -182,9 +207,79 @@ a:hover {
     font-weight: 700;
 }
 
-.status-planned { background: #1e3a5f; color: #9dcfff; }
-.status-done { background: #1e5f3a; color: #6be675; }
-.status-failed { background: #5f1e1e; color: #ff8a8a; }
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+/* PLANNED */
+.status-badge.planned {
+    background: linear-gradient(90deg, #3b82f6, #7a5cff);
+    color: white;
+    box-shadow: 0 0 12px rgba(122,92,255,0.6);
+}
+
+/* DONE */
+.status-badge.done {
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+    color: #042f1a;
+    box-shadow: 0 0 12px rgba(34,197,94,0.7);
+}
+
+/* FAILED */
+.status-badge.failed {
+    background: linear-gradient(90deg, #f97316, #ef4444);
+    color: white;
+    box-shadow: 0 0 12px rgba(239,68,68,0.6);
+}
+
+.add-card {
+    border: 2px dashed rgba(122,92,255,0.4);
+    background: rgba(122,92,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.add-inner {
+    text-align: center;
+    color: #7a5cff;
+}
+
+.add-plus {
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 1;
+}
+
+.add-text {
+    margin-top: 6px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+/* Hover */
+.add-card:hover {
+    background: rgba(122,92,255,0.15);
+    border-color: #7a5cff;
+    box-shadow: 0 0 25px rgba(122,92,255,0.4);
+}
+
+.add-card:hover .add-plus {
+    transform: scale(1.2) rotate(90deg);
+    transition: 0.3s;
+}
+
+
+
 
 .progress-bar {
     background: #111;
@@ -197,4 +292,76 @@ a:hover {
 .progress-fill {
     height: 80%;
     background: linear-gradient(90deg, #6be675, #4caf50);
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 40px;
+}
+
+.event-card {
+    background: #15163a;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 0 25px rgba(122,92,255,0.15);
+    transition: transform 0.2s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+}
+
+.event-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.event-card-header h3 {
+    font-size: 18px;
+}
+
+.event-card-progress {
+    margin: 15px 0;
+}
+
+.progress-bar {
+    height: 8px;
+    background: #2a2d66;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7a5cff, #b08cff);
+}
+
+.progress-text {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.event-desc {
+    font-size: 14px;
+    opacity: 0.85;
+    margin: 10px 0 15px;
+    line-height: 1.4;
+}
+
+.event-card-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn.view {
+    background: #7a5cff;
+    color: white;
+}
+
+.btn.edit {
+    background: #3b3f8c;
+    color: white;
 }
