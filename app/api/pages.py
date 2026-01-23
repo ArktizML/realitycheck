@@ -3,7 +3,7 @@ from fastapi.templating import Jinja2Templates
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse, HTMLResponse
-from starlette.status import HTTP_303_SEE_OTHER
+from datetime import datetime
 from app.database import get_db
 from app.services.event_service import get_all_events, get_event_by_id
 from app.schemas.event import EventCreate
@@ -134,9 +134,19 @@ def update_event_from_form(
     failure_note: str = Form(None),
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
+    completed_at: datetime = Form(None)
 ):
     if progress < 0 or progress > 100:
         raise HTTPException(status_code=400, detail="Invalid progress")
+
+
+    if progress >= 100:
+        status = "done"
+        completed_at = datetime.utcnow()
+    else:
+        if status == "done":
+            status = "planned"
+            completed_at = None
 
     update_event(
         db=db,
@@ -147,6 +157,7 @@ def update_event_from_form(
         progress=progress,
         status=status,
         failure_note=failure_note,
+        completed_at=completed_at
     )
 
     return RedirectResponse("/", status_code=303)
@@ -307,6 +318,7 @@ def fail_event_page(
 @router.post("/events/{event_id}/fail")
 def mark_event_failed(
     event_id: int,
+    request: Request,
     failure_note: str = Form(...),
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
@@ -324,10 +336,10 @@ def mark_event_failed(
         return templates.TemplateResponse(
             "fail_event.html",
             {
-                "request": Request,
+                "request": request,
                 "event": event,
                 "current_user": user,
-                "error": "Failure description is too short.",
+                "error": "Failure description is too short. (Min. 5 characters)",
             },
             status_code=400,
         )

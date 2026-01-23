@@ -3,6 +3,7 @@ from app.models.event import Event
 from app.models.user import User
 from app.security.dependencies import get_current_user
 from fastapi import Depends, HTTPException, status
+from datetime import datetime
 
 def get_all_events(db: Session, current_user: User = Depends(get_current_user)) -> list[Event]:
     return db.query(Event).filter(Event.user_id == current_user.id).all()
@@ -19,6 +20,7 @@ def update_event(
     status: str,
     description: str,
     failure_note: str | None = None,
+    completed_at: datetime | None = None,
 ):
     event = (
         db.query(Event)
@@ -33,6 +35,7 @@ def update_event(
     event.progress = progress
     event.status = status
     event.description = description
+    event.completed_at = completed_at
 
     if status == "failed":
         event.failure_note = failure_note

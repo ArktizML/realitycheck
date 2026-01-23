@@ -30,7 +30,6 @@
 
 
     <form method="post" class="fail-form">
-
         <label>What went wrong?</label>
         <textarea
             name="failure_note"
@@ -38,7 +37,9 @@
             required
             placeholder="Be honest. This is for you, not for the app."
         ></textarea>
-
+        {% if error != None %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
         <div class="fail-actions">
             <button type="submit" class="btn-fail">
                 Save & Reflect

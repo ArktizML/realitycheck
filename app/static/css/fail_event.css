@@ -13,6 +13,10 @@
     color: #c847ff;
 }
 
+.error{
+    color: red;
+}
+
 .subtitle {
     margin-top: 5px;
     color: #aaa;
