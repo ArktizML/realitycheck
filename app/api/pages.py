@@ -343,10 +343,21 @@ def mark_event_failed(
             },
             status_code=400,
         )
+    if event.progress == 100:
+        return templates.TemplateResponse(
+            "fail_event.html",
+            {
+                "request": request,
+                "event": event,
+                "current_user": user,
+                "error": "Can't fail if progress is 100%.",
+            },
+            status_code=400,
+        )
 
     event.status = "failed"
     event.failure_note = failure_note
-    event.progress = 0
+
 
     db.commit()
 
