@@ -13,5 +13,6 @@ class Event(Base):
     status: Mapped[str] = mapped_column(String(100), default="planned")
     failure_note: Mapped[str] = mapped_column(String(100), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    completed_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
     user = relationship("User", back_populates="events")
