@@ -9,13 +9,14 @@ from app.services.event_service import get_all_events, get_event_by_id
 from app.schemas.event import EventCreate
 from app.services.event_service import create_event
 from app.db.event_repository import delete_event, update_event
-from app.models.event import Event
+from app.models.event import Event, EventStatus, EventAction
 from app.services.auth_service import authenticate_user, create_user
 from app.security.jwt import create_access_token
 from app.schemas.user import UserCreate
 from app.models.user import User
 from app.utils.auth import get_user_for_templates, get_current_user_from_cookie
 from app.security.dependencies import get_current_user
+from app.services.event_engine import apply_event_action
 
 
 router = APIRouter()
@@ -363,3 +364,41 @@ def mark_event_failed(
 
     return RedirectResponse("/", status_code=303)
 
+@router.post("/events/{event_id}/progress")
+def update_progress(
+    event_id: int,
+    progress: int = Form(...),
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    event = get_event_by_id(db, event_id, user)
+
+    apply_event_action(
+        event,
+        EventAction.update_progress,
+        {"progress": progress}
+    )
+
+    db.commit()
+    return RedirectResponse(f"/events/{event_id}", 303)
+
+@router.post("/events/{event_id}/done")
+def mark_event_done(
+    event_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    event = (
+        db.query(Event)
+        .filter(Event.id == event_id, Event.user_id == user.id)
+        .first()
+    )
+
+    if not event:
+        raise HTTPException(status_code=404)
+
+    event.status = EventStatus.done
+    event.completed_at = datetime.utcnow()
+    db.commit()
+
+    return RedirectResponse("/", status_code=303)
