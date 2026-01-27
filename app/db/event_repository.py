@@ -4,6 +4,7 @@ from app.models.user import User
 from app.security.dependencies import get_current_user
 from fastapi import Depends, HTTPException, status
 from datetime import datetime
+from app.models.event import EventStatus
 
 def get_all_events(db: Session, current_user: User = Depends(get_current_user)) -> list[Event]:
     return db.query(Event).filter(Event.user_id == current_user.id).all()
@@ -30,6 +31,17 @@ def update_event(
 
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
+
+    if event.progress == 100:
+        event.status = EventStatus.done
+        if event.completed_at is None:
+            event.completed_at = datetime.utcnow()
+    else:
+        if event.status == EventStatus.done:
+            event.status = EventStatus.planned
+        event.completed_at = None
+
+
 
     event.title = title
     event.progress = progress

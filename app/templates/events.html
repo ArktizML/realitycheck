@@ -10,12 +10,12 @@
     <div class="row g-4">
         <div class="events-grid">
             {% for event in events %}
-            <div class="card event-card {{ event.status }}">
+            <div class="card event-card {{ event.status.value }}">
 
                 <div class="event-card-header">
                     <h3>{{ event.title }}</h3>
-                    <span class="status-badge {{ event.status }}">
-                        {{ event.status|upper }}
+                    <span class="status-badge {{ event.status.value }}">
+                        {{ event.status.value|upper }}
                     </span>
                 </div>
 
