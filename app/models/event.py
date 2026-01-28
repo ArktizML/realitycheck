@@ -24,7 +24,6 @@ class Event(Base):
     title: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str] = mapped_column(String(100), nullable=True)
     progress: Mapped[int] = mapped_column(Integer, default=0)
-    # status: Mapped[str] = mapped_column(String(100), default="planned")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     status: Mapped[EventStatus] = mapped_column(SQLEnum(EventStatus), default=EventStatus.planned)
     completed_at: Mapped[datetime | None] = mapped_column(nullable=True)
@@ -32,7 +31,3 @@ class Event(Base):
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
     user = relationship("User", back_populates="events")
 
-class EventStatus(str, enum.Enum):
-    planned = "planned"
-    done = "done"
-    failed = "failed"

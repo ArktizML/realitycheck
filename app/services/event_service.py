@@ -2,11 +2,8 @@ from app.schemas.event import EventCreate, EventRead, EventStats
 from sqlalchemy import func
 from datetime import datetime
 from app.models.event import Event
-from app.database import get_db
 from sqlalchemy.orm import Session
 from app.db.event_repository import get_all_events, get_event_by_id, update_event, delete_event
-from app.security.dependencies import get_current_user
-from app.security.jwt import create_access_token
 from app.models.user import User
 
 

@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from app.api.events import router
 from app.database import engine, Base
 from app.api.auth import router as auth_router
-from app.models.event import Event
 from app.api import pages
 from fastapi.staticfiles import StaticFiles
 
