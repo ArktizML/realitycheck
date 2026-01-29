@@ -6,11 +6,12 @@ from sqlalchemy import pool
 from alembic import context
 
 from app.database import Base
-
+from app.models import User, Event, EventHistory
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
+
 
 
 
@@ -91,3 +92,4 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
+

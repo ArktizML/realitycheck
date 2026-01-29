@@ -4,6 +4,7 @@ import enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from datetime import datetime
+from app.models.event_history import EventHistory
 
 
 class EventStatus(str, enum.Enum):
@@ -30,4 +31,5 @@ class Event(Base):
     failure_note: Mapped[str | None] = mapped_column(String(500), nullable=True)
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
     user = relationship("User", back_populates="events")
+    history = relationship("EventHistory", back_populates="event", cascade="all, delete-orphan")
 
