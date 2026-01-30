@@ -9,6 +9,7 @@ from app.schemas.event import EventCreate
 from app.services.event_service import create_event
 from app.db.event_repository import delete_event, update_event
 from app.models.event import Event, EventStatus, EventAction
+from app.models.event_history import EventHistory
 from app.services.auth_service import authenticate_user, create_user
 from app.security.jwt import create_access_token
 from app.schemas.user import UserCreate
@@ -333,8 +334,19 @@ def mark_event_failed(
             status_code=400,
         )
 
+    old_status = event.status
     event.status = "failed"
     event.failure_note = failure_note
+    new_status = event.status
+    history = EventHistory(
+        event_id=event.id,
+        user_id=user.id,
+        old_value=old_status,
+        new_value=new_status,
+        field="Status",
+        changed_at=datetime.utcnow(),
+    )
+    db.add(history)
 
 
     db.commit()
@@ -350,6 +362,7 @@ def update_progress(
 ):
     event = get_event_by_id(db, event_id, user)
 
+
     apply_event_action(
         event,
         EventAction.update_progress,
@@ -357,6 +370,8 @@ def update_progress(
     )
 
     db.commit()
+
+    db.refresh(event)
     return RedirectResponse(f"/events/{event_id}", 303)
 
 @router.post("/events/{event_id}/done")
@@ -373,9 +388,24 @@ def mark_event_done(
 
     if not event:
         raise HTTPException(status_code=404)
-
+    old_status = event.status
     event.status = EventStatus.done
     event.completed_at = datetime.utcnow()
+    new_status = event.status
+
+    history = EventHistory(
+        event_id=event.id,
+        user_id=user.id,
+        old_value=old_status,
+        new_value=new_status,
+        field="Status",
+        changed_at=datetime.utcnow(),
+    )
+
+    db.add(history)
+
     db.commit()
+
+    db.refresh(event)
 
     return RedirectResponse("/", status_code=303)
