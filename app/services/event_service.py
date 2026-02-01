@@ -1,3 +1,5 @@
+from ctypes.wintypes import tagSIZE
+
 from app.schemas.event import EventCreate, EventRead, EventStats
 from sqlalchemy import func
 from datetime import datetime
@@ -5,6 +7,7 @@ from app.models.event import Event
 from sqlalchemy.orm import Session
 from app.db.event_repository import get_all_events, get_event_by_id, update_event, delete_event
 from app.models.user import User
+from app.models.tag import Tag
 
 
 def list_events(db: Session) -> list[EventRead]:
@@ -31,10 +34,23 @@ def create_event(db: Session, event_data: EventCreate, user: User):
         user_id=user.id,
     )
 
+    if event_data.tags:
+        tag_names = [t.strip() for t in event_data.tags.split(",") if t.strip()]
+
+        for name in tag_names:
+            tag = db.query(Tag).filter(Tag.name == name).first()
+            if not tag:
+                tag = Tag(name=name)
+                db.add(tag)
+                db.flush()
+            event.tags.append(tag)
+    # ------------
+
     db.add(event)
     db.commit()
     db.refresh(event)
     return EventRead.model_validate(event)
+
 
 
 def delete_event_service(db: Session, event_id: int) -> bool:

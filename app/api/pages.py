@@ -75,6 +75,7 @@ def new_event_form(request: Request, db: Session = Depends(get_db)):
 def create_event_from_form(
     request: Request,
     title: str = Form(...),
+    tags: str = Form(""),
     description: str = Form(None),
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
@@ -93,6 +94,7 @@ def create_event_from_form(
     event_data = EventCreate(
         title=title.strip(),
         description=description.strip() if description else None,
+        tags=tags
     )
 
     create_event(db, event_data, user)

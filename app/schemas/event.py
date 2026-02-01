@@ -4,6 +4,7 @@ from datetime import datetime
 
 class EventCreate(BaseModel):
     title: str
+    tags: str | None = None
     description: Optional[str] = None
 
 

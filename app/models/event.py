@@ -1,10 +1,9 @@
-from sqlalchemy import Integer, String, DateTime, ForeignKey
+from sqlalchemy import Integer, String, DateTime, ForeignKey, Table, Column
 from sqlalchemy import Enum as SQLEnum
 import enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from datetime import datetime
-from app.models.event_history import EventHistory
 
 
 class EventStatus(str, enum.Enum):
@@ -32,4 +31,12 @@ class Event(Base):
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
     user = relationship("User", back_populates="events")
     history = relationship("EventHistory", back_populates="event", cascade="all, delete-orphan")
+    tags = relationship("Tag", secondary="event_tags", back_populates="events")
 
+
+event_tags = Table(
+    "event_tags",
+    Base.metadata,
+    Column("event_id", ForeignKey("events.id"), primary_key=True),
+    Column("tag_id", ForeignKey("tags.id"), primary_key=True),
+)

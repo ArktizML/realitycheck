@@ -10,6 +10,8 @@
     {% if errors and errors.title %}
         <div class="error">{{ errors.title }}</div>
     {% endif %}
+    <label>Tag</label>
+    <input name="tags" placeholder="Job, Health, Money..." required />
 
     <label>Description</label>
     <textarea name="description"></textarea>
