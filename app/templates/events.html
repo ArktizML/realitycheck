@@ -18,6 +18,13 @@
                         {{ event.status.value|upper }}
                     </span>
                 </div>
+                {% if event.tags %}
+                <div class="event-tags">
+                    {% for tag in event.tags %}
+                        <span class="tag-pill">{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
 
                 <div class="event-card-progress">
                     <div class="progress-bar">

@@ -278,6 +278,29 @@ a:hover {
     transition: 0.3s;
 }
 
+.event-tags {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.tag-pill {
+    background: #1f2933;
+    color: #e5e7eb;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid #374151;
+    transition: all 0.2s ease;
+}
+
+.tag-pill:hover {
+    background: #374151;
+    transform: translateY(-1px);
+}
+
 
 
 
