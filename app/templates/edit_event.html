@@ -14,12 +14,12 @@
 
         <div class="field">
             <label><strong>Title</strong></label>
-            <input type="text" placeholder="e.g. Learn new language" name="title" value="{{ event.title }}" required>
+            <input type="text" maxlength="100" placeholder="Learn new language" name="title" value="{{ event.title }}" required>
         </div>
 
         <div class="field">
             <label><strong>Description</strong></label>
-            <textarea name="description" rows="4" placeholder="e.g. Learn deutsch to B1 state in 3 months">{{ event.description or "" }}</textarea>
+            <textarea name="description" maxlength="500" rows="4" placeholder="e.g. Learn deutsch to B1 state in 3 months">{{ event.description or "" }}</textarea>
         </div>
 
         <div class="progress-wrapper">

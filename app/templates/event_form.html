@@ -6,15 +6,15 @@
     <h1>Create Event</h1>
 
     <label>Title</label>
-    <input name="title" placeholder="e.g. Learn new language" required />
+    <input name="title"  maxlength="100" placeholder="e.g. Learn new language" required />
     {% if errors and errors.title %}
         <div class="error">{{ errors.title }}</div>
     {% endif %}
     <label>Tag</label>
-    <input name="tags" placeholder="Job, Health, Money..." required />
+    <input name="tags" maxlength="50" placeholder="Job, Health, Money..." required />
 
     <label>Description</label>
-    <textarea name="description" placeholder="e.g. Learn deutsch to B1 state in 3 months"></textarea>
+    <textarea name="description" maxlength="500" placeholder="e.g. Learn deutsch to B1 state in 3 months"></textarea>
 
     <button type="submit">Create</button>
 </form>
