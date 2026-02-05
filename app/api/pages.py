@@ -48,12 +48,15 @@ def home(
         .all()
     )
 
+    count = len(events)
+
     return templates.TemplateResponse(
         "events.html",
         {
             "request": request,
             "current_user": user,
             "events": events,
+            "count": count,
         },
     )
 
