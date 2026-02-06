@@ -3,6 +3,31 @@ body {
     color: #e5e7eb;
 }
 
+.events-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.sort-toggle {
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: #1e1e1e;
+    color: #fff;
+    font-size: 14px;
+    text-decoration: none;
+    transition: 0.2s;
+    border: 1px solid #333;
+}
+
+.sort-toggle:hover {
+    background: #2a2a2a;
+    transform: translateY(-1px);
+}
+
+
+
 .navbar {
     background-color: #111827 !important;
 }
@@ -388,3 +413,4 @@ a:hover {
     background: #3b3f8c;
     color: white;
 }
+

@@ -97,3 +97,19 @@ def event_stats(db: Session) -> EventStats:
         min_gap=min_gap,
         created_at=datetime.utcnow()
     )
+
+def get_events_desc(db: Session, user: User):
+    return (
+        db.query(Event)
+        .filter(Event.user_id == user.id)
+        .order_by(Event.created_at.desc())
+        .all()
+    )
+
+def get_events_asc(db: Session, user: User):
+    return (
+        db.query(Event)
+        .filter(Event.user_id == user.id)
+        .order_by(Event.created_at.asc())
+        .all()
+    )

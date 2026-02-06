@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse, HTMLResponse
 from datetime import datetime
 from app.database import get_db
-from app.services.event_service import get_event_by_id
+from app.services.event_service import get_event_by_id, get_events_desc, get_events_asc
 from app.schemas.event import EventCreate
 from app.services.event_service import create_event
 from app.db.event_repository import delete_event, update_event
@@ -29,9 +29,12 @@ templates = Jinja2Templates(directory="app/templates")
 def home(
     request: Request,
     db: Session = Depends(get_db),
+    sort: str = "desc",
 ):
     user = get_user_for_templates(request, db)
-
+    print("Jestem w list_events")
+    print("raw ", dict(request.query_params))
+    print("Sort: ", sort)
     if not user:
         return templates.TemplateResponse(
             "landing.html",
@@ -41,14 +44,14 @@ def home(
             },
         )
 
-    events = (
-        db.query(Event)
-        .filter(Event.user_id == user.id)
-        .order_by(Event.created_at.desc())
-        .all()
-    )
+    if sort == "asc":
+        events = get_events_asc(db, user)
+    else:
+        events = get_events_desc(db, user)
 
     count = len(events)
+
+    print(sort)
 
     return templates.TemplateResponse(
         "events.html",
@@ -57,6 +60,7 @@ def home(
             "current_user": user,
             "events": events,
             "count": count,
+            "sort": sort,
         },
     )
 

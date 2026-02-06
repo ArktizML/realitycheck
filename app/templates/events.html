@@ -3,8 +3,17 @@
 {% block title %}Events | RealityCheck{% endblock %}
 
 {% block content %}
-<h2>You have {{ count }} plans 📆</h2>
-
+    <div class="events-header">
+        <h2>You have {{ count }} plans 📆</h2>
+        <a class="sort-toggle"
+           href="/?{{ 'asc' if sort == 'desc' else 'desc' }}">
+            {% if sort == "desc" %}
+                Newest first ↓
+            {% else %}
+                Oldest first ↑
+            {% endif %}
+        </a>
+    </div>
 {% if events %}
         <div class="container mt-4">
     <div class="row g-4">
