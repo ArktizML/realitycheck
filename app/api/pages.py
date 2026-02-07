@@ -32,9 +32,7 @@ def home(
     sort: str = "desc",
 ):
     user = get_user_for_templates(request, db)
-    print("Jestem w list_events")
-    print("raw ", dict(request.query_params))
-    print("Sort: ", sort)
+
     if not user:
         return templates.TemplateResponse(
             "landing.html",
@@ -51,7 +49,6 @@ def home(
 
     count = len(events)
 
-    print(sort)
 
     return templates.TemplateResponse(
         "events.html",
