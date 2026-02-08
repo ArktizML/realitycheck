@@ -3,7 +3,7 @@ from ctypes.wintypes import tagSIZE
 from app.schemas.event import EventCreate, EventRead, EventStats
 from sqlalchemy import func
 from datetime import datetime
-from app.models.event import Event
+from app.models.event import Event, EventStatus
 from sqlalchemy.orm import Session
 from app.db.event_repository import get_all_events, get_event_by_id, update_event, delete_event
 from app.models.user import User
@@ -113,3 +113,19 @@ def get_events_asc(db: Session, user: User):
         .order_by(Event.created_at.asc())
         .all()
     )
+
+def get_event_stats(db: Session, user: User):
+    return {
+        "planned": db.query(Event).filter(
+            Event.user_id == user.id,
+            Event.status == EventStatus.planned
+        ).count(),
+        "done": db.query(Event).filter(
+            Event.user_id == user.id,
+            Event.status == EventStatus.done
+        ).count(),
+        "failed": db.query(Event).filter(
+            Event.user_id == user.id,
+            Event.status == EventStatus.failed
+        ).count(),
+    }

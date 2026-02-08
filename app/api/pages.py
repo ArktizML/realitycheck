@@ -6,7 +6,7 @@ from datetime import datetime
 from app.database import get_db
 from app.services.event_service import get_event_by_id, get_events_desc, get_events_asc
 from app.schemas.event import EventCreate
-from app.services.event_service import create_event
+from app.services.event_service import create_event, get_event_stats
 from app.db.event_repository import delete_event, update_event
 from app.models.event import Event, EventStatus, EventAction
 from app.models.event_history import EventHistory
@@ -32,6 +32,7 @@ def home(
     sort: str = "desc",
 ):
     user = get_user_for_templates(request, db)
+    stats = get_event_stats(db, user)
 
     if not user:
         return templates.TemplateResponse(
@@ -58,6 +59,7 @@ def home(
             "events": events,
             "count": count,
             "sort": sort,
+            "stats": stats
         },
     )
 

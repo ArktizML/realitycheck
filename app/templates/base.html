@@ -24,6 +24,17 @@
     <div class="d-flex align-items-center gap-3">
 
         {% if current_user %}
+            <div class="dashboard">
+                <div class="dash-item planned">
+                    Planned: <span>{{ stats.planned }}</span>
+                </div>
+                <div class="dash-item done">
+                    Done: <span>{{ stats.done }}</span>
+                </div>
+                <div class="dash-item failed">
+                    Failed: <span>{{ stats.failed }}</span>
+                </div>
+            </div>
             <span class="text-secondary small">
                 Logged as: <strong>{{ current_user.login }}</strong>
             </span>
