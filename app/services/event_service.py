@@ -115,17 +115,17 @@ def get_events_asc(db: Session, user: User):
     )
 
 def get_event_stats(db: Session, user: User):
-    return {
-        "planned": db.query(Event).filter(
-            Event.user_id == user.id,
-            Event.status == EventStatus.planned
-        ).count(),
-        "done": db.query(Event).filter(
-            Event.user_id == user.id,
-            Event.status == EventStatus.done
-        ).count(),
-        "failed": db.query(Event).filter(
-            Event.user_id == user.id,
-            Event.status == EventStatus.failed
-        ).count(),
-    }
+        return {
+            "planned": db.query(Event).filter(
+                Event.user_id == user.id,
+                Event.status == EventStatus.planned
+            ).count(),
+            "done": db.query(Event).filter(
+                Event.user_id == user.id,
+                Event.status == EventStatus.done
+            ).count(),
+            "failed": db.query(Event).filter(
+                Event.user_id == user.id,
+                Event.status == EventStatus.failed
+            ).count(),
+        }

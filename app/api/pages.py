@@ -32,7 +32,7 @@ def home(
     sort: str = "desc",
 ):
     user = get_user_for_templates(request, db)
-    stats = get_event_stats(db, user)
+
 
     if not user:
         return templates.TemplateResponse(
@@ -43,6 +43,7 @@ def home(
             },
         )
 
+    stats = get_event_stats(db, user)
     if sort == "asc":
         events = get_events_asc(db, user)
     else:
@@ -59,7 +60,8 @@ def home(
             "events": events,
             "count": count,
             "sort": sort,
-            "stats": stats
+            "stats": stats,
+            "show_stats": True
         },
     )
 
