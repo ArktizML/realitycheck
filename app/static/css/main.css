@@ -11,20 +11,30 @@ body {
 }
 
 .sort-toggle {
-    padding: 6px 12px;
-    border-radius: 6px;
-    background: #1e1e1e;
-    color: #fff;
-    font-size: 14px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
     text-decoration: none;
-    transition: 0.2s;
+    transition: all 0.2s ease;
     border: 1px solid #333;
 }
 
+.sort-toggle.desc {
+    color: #00ff88;
+    border-color: #00ff88;
+    box-shadow: 0 0 6px rgba(0,255,136,0.4);
+}
+
+.sort-toggle.asc {
+    color: #00aaff;
+    border-color: #00aaff;
+    box-shadow: 0 0 6px rgba(0,170,255,0.4);
+}
+
 .sort-toggle:hover {
-    background: #2a2a2a;
     transform: translateY(-1px);
 }
+
 
 .dashboard {
     display: flex;
@@ -370,8 +380,6 @@ a:hover {
     background: #374151;
     transform: translateY(-1px);
 }
-
-
 
 
 .progress-bar {

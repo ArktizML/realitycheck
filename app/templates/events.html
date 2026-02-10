@@ -5,7 +5,7 @@
 {% block content %}
     <div class="events-header">
         <h2>You have {{ count }} plans 📆</h2>
-        <a class="sort-toggle"
+        <a class="sort-toggle {% if sort == 'asc' %}asc{% else %}desc{% endif %}"
            href="/?sort={{ 'asc' if sort == 'desc' else 'desc' }}">
             {% if sort == "desc" %}
                 Newest first ↓
@@ -13,6 +13,7 @@
                 Oldest first ↑
             {% endif %}
         </a>
+
     </div>
 {% if events %}
         <div class="container mt-4">
