@@ -35,6 +35,11 @@ body {
     transform: translateY(-1px);
 }
 
+.sort-toggle.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
 
 .dashboard {
     display: flex;
