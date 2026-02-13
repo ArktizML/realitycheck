@@ -5,8 +5,8 @@
 {% block content %}
     <div class="events-header">
         <h2>You have {{ count }} plans 📆</h2>
-        <a class="sort-toggle {% if sort == 'asc' %}asc{% else %}desc{% endif %}{% if count == 0 %} disabled {% endif %}"
-           title="Toggle sorting order" href="/?sort={{ 'asc' if sort == 'desc' else 'desc' }}">
+        <a class="sort-toggle"
+           title="Toggle sorting order" href="/?status={{ status or '' }}&sort={{ 'asc' if sort == 'desc' else 'desc' }}">
             {% if sort == "desc" %}
                 Newest first ↓
             {% else %}
@@ -15,6 +15,20 @@
         </a>
 
     </div>
+    <div class="status-filters">
+        <a href="/?status=planned&sort={{ sort }}"
+           class="{{ 'active' if status == 'planned' else '' }}">Planned</a>
+
+        <a href="/?status=done&sort={{ sort }}"
+           class="{{ 'active' if status == 'done' else '' }}">Done</a>
+
+        <a href="/?status=failed&sort={{ sort }}"
+           class="{{ 'active' if status == 'failed' else '' }}">Failed</a>
+
+        <a href="/?sort={{ sort }}"
+           class="{{ 'active' if not status else '' }}">All</a>
+    </div>
+
 {% if events %}
         <div class="container mt-4">
     <div class="row g-4">

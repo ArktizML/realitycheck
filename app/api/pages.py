@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse, HTMLResponse
 from datetime import datetime
 from app.database import get_db
-from app.services.event_service import get_event_by_id, get_events_desc, get_events_asc
+from app.services.event_service import get_event_by_id, get_events, get_events_by_status
 from app.schemas.event import EventCreate
 from app.services.event_service import create_event, get_event_stats
 from app.db.event_repository import delete_event, update_event
@@ -30,8 +30,10 @@ def home(
     request: Request,
     db: Session = Depends(get_db),
     sort: str = "desc",
+    status: str | None = None,
 ):
     user = get_user_for_templates(request, db)
+    status = status or None
 
 
     if not user:
@@ -44,10 +46,11 @@ def home(
         )
 
     stats = get_event_stats(db, user)
-    if sort == "asc":
-        events = get_events_asc(db, user)
+
+    if status:
+        events = get_events_by_status(db, user, status, sort)
     else:
-        events = get_events_desc(db, user)
+        events = get_events(db, user, sort)
 
     count = len(events)
 

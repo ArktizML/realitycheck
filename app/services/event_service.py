@@ -114,6 +114,16 @@ def get_events_asc(db: Session, user: User):
         .all()
     )
 
+def get_events(db: Session, user: User, sort):
+    query = db.query(Event).filter(Event.user_id == user.id)
+
+    if sort == "asc":
+        query = query.order_by(Event.created_at.asc())
+    else:
+        query = query.order_by(Event.created_at.desc())
+
+    return query.all()
+
 def get_event_stats(db: Session, user: User):
         return {
             "planned": db.query(Event).filter(
@@ -129,3 +139,16 @@ def get_event_stats(db: Session, user: User):
                 Event.status == EventStatus.failed
             ).count(),
         }
+
+def get_events_by_status(db, user, status, sort):
+    q = db.query(Event).filter(
+        Event.user_id == user.id,
+        Event.status == status
+    )
+
+    if sort == "asc":
+        q = q.order_by(Event.created_at.asc())
+    else:
+        q = q.order_by(Event.created_at.desc())
+
+    return q.all()
