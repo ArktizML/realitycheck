@@ -64,7 +64,8 @@ def home(
             "count": count,
             "sort": sort,
             "stats": stats,
-            "show_stats": True
+            "show_stats": True,
+            "status": status,
         },
     )
 
