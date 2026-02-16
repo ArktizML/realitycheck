@@ -142,6 +142,9 @@ body {
 
 .navbar {
     background-color: #111827 !important;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .event-card {
@@ -523,4 +526,3 @@ a:hover {
     background: #3b3f8c;
     color: white;
 }
-
