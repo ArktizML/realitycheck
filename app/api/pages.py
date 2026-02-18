@@ -19,6 +19,7 @@ from app.security.dependencies import get_current_user
 from app.services.event_engine import apply_event_action
 
 
+
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
@@ -53,7 +54,7 @@ def home(
         events = get_events(db, user, sort)
 
     count = len(events)
-
+    notice = request.session.pop("login_notice", None)
 
     return templates.TemplateResponse(
         "events.html",
@@ -66,6 +67,7 @@ def home(
             "stats": stats,
             "show_stats": True,
             "status": status,
+            "notice": notice,
         },
     )
 
@@ -223,6 +225,7 @@ async def login_form(
     form = await request.form()
     login = form.get("login")
     password = form.get("password")
+    request.session["login_notice"] = "Remember to update your planned goals."
 
     user = authenticate_user(db, login, password)
     if not user:

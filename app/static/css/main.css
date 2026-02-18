@@ -526,3 +526,40 @@ a:hover {
     background: #3b3f8c;
     color: white;
 }
+
+.login-popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.popup-box {
+    background: #0b0614;
+    padding: 30px 40px;
+    border-radius: 14px;
+    border: 1px solid rgba(138, 43, 226, 0.2);
+    box-shadow: 0 0 40px rgba(138, 43, 226, 0.25);
+    color: #e9ddff;
+    font-size: 15px;
+    position: relative;
+    text-align: center;
+    max-width: 400px;
+}
+
+.close-popup {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #9f8cff;
+    transition: 0.2s;
+}
+
+.close-popup:hover {
+    color: #ffffff;
+}

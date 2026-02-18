@@ -3,6 +3,15 @@
 {% block title %}Events | RealityCheck{% endblock %}
 
 {% block content %}
+    {% if notice %}
+    <div class="login-popup">
+        <div class="popup-box">
+            {{ notice }}
+            <a href="/" class="close-popup">×</a>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="events-header">
         <h2>You have {{ count }} plans 📆</h2>
         <a class="sort-toggle"
