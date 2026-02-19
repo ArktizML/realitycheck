@@ -54,7 +54,12 @@ def home(
         events = get_events(db, user, sort)
 
     count = len(events)
+    planned_count = db.query(Event).filter(Event.user_id == user.id,Event.status == EventStatus.planned).count()
+
+
     notice = request.session.pop("login_notice", None)
+
+    overplanning = planned_count > 5
 
     return templates.TemplateResponse(
         "events.html",
@@ -68,6 +73,8 @@ def home(
             "show_stats": True,
             "status": status,
             "notice": notice,
+            "overplanning": overplanning,
+            "planned_count": planned_count,
         },
     )
 

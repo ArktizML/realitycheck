@@ -12,6 +12,13 @@
     </div>
     {% endif %}
 
+    {% if overplanning %}
+    <div class="overplanning-alert">
+        You have {{ planned_count }} planned goals.
+        Finish something before adding more.
+    </div>
+    {% endif %}
+
     <div class="events-header">
         <h2>You have {{ count }} plans 📆</h2>
         <a class="sort-toggle"
