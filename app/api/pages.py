@@ -47,6 +47,7 @@ def home(
         )
 
     stats = get_event_stats(db, user)
+    success_rate = int((stats["done"] / (stats["failed"] + stats["done"])) * 100)
 
     if status:
         events = get_events_by_status(db, user, status, sort)
@@ -75,6 +76,7 @@ def home(
             "notice": notice,
             "overplanning": overplanning,
             "planned_count": planned_count,
+            "success_rate": success_rate,
         },
     )
 

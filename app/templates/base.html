@@ -26,6 +26,16 @@
         {% if current_user %}
             {% if show_stats %}
             <div class="dashboard">
+                <div class="nav-success">
+                    <span class="success-label">Success rate</span>
+                    <span class="success-value
+                    {% if success_rate >= 70 %}success-good
+                    {% elif success_rate >= 40 %}success-mid
+                    {% else %}success-bad
+                    {% endif %}
+                    ">
+                        {{ success_rate }}% </span>
+                </div>
                 <div class="dash-item planned">
                     Planned: <span>{{ stats.planned }}</span>
                 </div>
