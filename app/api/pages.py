@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Request, Form, HTTPException
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse, HTMLResponse
-from datetime import datetime
+from datetime import datetime, date
 from app.database import get_db
 from app.services.event_service import get_event_by_id, get_events, get_events_by_status
 from app.schemas.event import EventCreate
@@ -77,6 +77,7 @@ def home(
             "overplanning": overplanning,
             "planned_count": planned_count,
             "success_rate": success_rate,
+            "today": date.today(),
         },
     )
 
@@ -100,6 +101,7 @@ def create_event_from_form(
     title: str = Form(...),
     tags: str = Form(""),
     description: str = Form(None),
+    due_date: datetime = Form(None),
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ):
@@ -117,6 +119,7 @@ def create_event_from_form(
     event_data = EventCreate(
         title=title.strip(),
         description=description.strip() if description else None,
+        due_date=due_date if due_date else None,
         tags=tags
     )
 

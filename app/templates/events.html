@@ -50,7 +50,9 @@
     <div class="row g-4">
         <div class="events-grid">
             {% for event in events %}
-            <div class="card event-card {{ event.status.value }}">
+            <div class="card event-card {{ event.status.value }} {% if event.due_date and event.due_date < today and event.status == 'planned' %}
+            overdue
+            {% endif %}">
 
                 <div class="event-card-header">
                     <h3>{{ event.title }}</h3>
@@ -76,6 +78,12 @@
                 <p class="event-desc">
                     {{ event.description or "No description yet." }}
                 </p>
+
+                {% if event.due_date %}
+                <div class="event-deadline">
+                    Due: {{ event.due_date }}
+                </div><br>
+                {% endif %}
 
                 <div class="event-card-actions">
                     <a href="/events/{{ event.id }}" class="btn view">🔎 View</a>

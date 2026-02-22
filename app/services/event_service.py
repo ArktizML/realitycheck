@@ -31,6 +31,7 @@ def create_event(db: Session, event_data: EventCreate, user: User):
         progress=0,
         status="planned",
         completed_at=None,
+        due_date=event_data.due_date,
         user_id=user.id,
     )
 

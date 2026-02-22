@@ -5,6 +5,7 @@ from datetime import datetime
 class EventCreate(BaseModel):
     title: str
     tags: str | None = None
+    due_date: datetime | None = None
     description: Optional[str] = None
 
 

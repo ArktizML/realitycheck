@@ -615,3 +615,19 @@ a:hover {
     color: #ff3c3c;
     text-shadow: 0 0 8px rgba(255, 60, 60, 0.8);
 }
+
+.event-card.overdue {
+    border: 1px solid rgba(255, 215, 0, 0.6);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.event-card.overdue .event-deadline {
+    color: #ff4d4d;
+    font-weight: 600;
+}
+
+.event-deadline{
+    margin-top: 8px;
+    font-size: 13px;
+    color: #b9a8ff;
+}

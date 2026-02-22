@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, DateTime, ForeignKey, Table, Column
+from sqlalchemy import Integer, String, DateTime, ForeignKey, Table, Column, Date
 from sqlalchemy import Enum as SQLEnum
 import enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -27,6 +27,7 @@ class Event(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     status: Mapped[EventStatus] = mapped_column(SQLEnum(EventStatus), default=EventStatus.planned)
     completed_at: Mapped[datetime | None] = mapped_column(nullable=True)
+    due_date: Mapped[datetime | None] = mapped_column(Date, nullable=True)
     failure_note: Mapped[str | None] = mapped_column(String(500), nullable=True)
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
     user = relationship("User", back_populates="events")
