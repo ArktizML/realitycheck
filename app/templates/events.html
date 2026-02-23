@@ -41,6 +41,9 @@
         <a href="/?status=failed&sort={{ sort }}"
            class="{{ 'active' if status == 'failed' else '' }}">Failed</a>
 
+        <a href="/?status=overdue&sort={{ sort }}"
+           class="{{ 'active' if status == 'overdue' else '' }}">Overdue</a>
+
         <a href="/?sort={{ sort }}"
            class="{{ 'active' if not status else '' }}">All</a>
     </div>

@@ -2,7 +2,7 @@ from ctypes.wintypes import tagSIZE
 
 from app.schemas.event import EventCreate, EventRead, EventStats
 from sqlalchemy import func
-from datetime import datetime
+from datetime import datetime, date
 from app.models.event import Event, EventStatus
 from sqlalchemy.orm import Session
 from app.db.event_repository import get_all_events, get_event_by_id, update_event, delete_event
@@ -146,6 +146,13 @@ def get_events_by_status(db, user, status, sort):
         Event.user_id == user.id,
         Event.status == status
     )
+
+    today = date.today()
+
+    if status == "overdue":
+        q = db.query(Event).filter(Event.user_id == user.id, Event.status == "planned",
+                                   Event.due_date != None,
+                                   Event.due_date < today)
 
     if sort == "asc":
         q = q.order_by(Event.created_at.asc())
