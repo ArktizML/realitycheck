@@ -438,3 +438,28 @@ def mark_event_done(
     db.refresh(event)
 
     return RedirectResponse("/", status_code=303)
+
+@router.get("/hall-of-fame", response_class=HTMLResponse)
+def hall_of_fame(request: Request, db: Session = Depends(get_db)):
+
+    user = get_current_user(request, db)
+
+    if not user:
+        return RedirectResponse(url="/login")
+
+    done_events = db.query(Event).filter(
+        Event.user_id == user.id,
+        Event.status == "done"
+    ).order_by(Event.completed_at.desc()).all()
+
+    done_count = len(done_events)
+
+    return templates.TemplateResponse(
+        "hall_of_fame.html",
+        {
+            "request": request,
+            "current_user": user,
+            "done_events": done_events,
+            "done_count": done_count,
+        }
+    )

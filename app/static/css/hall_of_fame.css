@@ -1,0 +1,61 @@
+.hof-container{
+    max-width: 800px;
+    margin: 40px auto;
+}
+
+.hof-title{
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #f5d97b;
+    text-shadow: 0 0 10px rgba(245, 217, 123, 0.4);
+}
+
+.hof-summary{
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #ccc
+}
+
+.hof-count{
+    font-weight: 700;
+    color: #f5d97b;
+}
+
+.hof-milestone{
+    margin-bottom: 30px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: rgba(245, 217, 123, 0.08);
+    border: 1px solid rgba(245, 217, 123, 0.4);
+    color: #f5d97b;
+    font-weight: 600;
+}
+
+.hof-list{
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.hof-card{
+    padding: 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(245, 217, 123, 0.15);
+    transition: 0.2s ease;
+}
+
+.hof-card:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(245, 217, 123, 0.15);
+}
+
+.hof-card-title{
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.hof-card-date{
+    font-size: 13px;
+    color: #aaa;
+}
