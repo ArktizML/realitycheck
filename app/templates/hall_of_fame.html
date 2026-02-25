@@ -10,11 +10,33 @@
         You have completed <span class="hof-count">{{ done_count }}</span> goals.
     </div>
 
-    {% if done_count >= 10 %}
-        <div class="hof-milestone">
-            🥉 Bronze Builder - 10 Goals Completed
+   <div class="hof-level-section">
+
+    {% if current_milestone %}
+        <div class="hof-current-level">
+            {{ current_milestone.icon }}
+            {{ current_milestone.name }}
         </div>
     {% endif %}
+
+    {% if next_milestone %}
+        <div class="hof-progress-text">
+            {{ done_count }} / {{ next_milestone.required }}
+            ({{ remaining }} to next level)
+        </div>
+
+        <div class="hof-progress-bar">
+            <div class="hof-progress-fill"
+            style="width: {{ progress_percent }}%;">
+            </div>
+        </div>
+    {% else %}
+        <div class="hof-max-level">
+            👑 Maximum Level Achieved
+        </div>
+    {% endif %}
+
+    </div>
 
     <div class="hof-list">
         {% for event in done_events %}

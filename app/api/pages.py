@@ -454,6 +454,29 @@ def hall_of_fame(request: Request, db: Session = Depends(get_db)):
 
     done_count = len(done_events)
 
+    milestones = [
+        {"name": "Bronze Builder", "required": 10, "icon": "🥉"},
+        {"name": "Silver Consistent", "required": 25, "icon": "🥈"},
+        {"name": "Gold Finisher", "required": 50, "icon": "🥇"},
+        {"name": "Elite Relentless", "required": 100, "icon": "🏆"}
+    ]
+
+    current_milestone = None
+    next_milestone = None
+
+    for milestone in milestones:
+        if done_count >= milestone["required"]:
+            current_milestone = milestone
+        elif not next_milestone:
+            next_milestone = milestone
+
+    progress_percent = 100
+    remaining = 0
+
+    if next_milestone:
+        progress_percent = int((done_count / next_milestone["required"]) * 100)
+        remaining = next_milestone["required"] - done_count
+
     return templates.TemplateResponse(
         "hall_of_fame.html",
         {
@@ -461,5 +484,9 @@ def hall_of_fame(request: Request, db: Session = Depends(get_db)):
             "current_user": user,
             "done_events": done_events,
             "done_count": done_count,
+            "current_milestone": current_milestone,
+            "progress_percent": progress_percent,
+            "remaining": remaining,
+            "next_milestone": next_milestone,
         }
     )

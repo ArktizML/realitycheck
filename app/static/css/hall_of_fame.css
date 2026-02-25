@@ -59,3 +59,41 @@
     font-size: 13px;
     color: #aaa;
 }
+
+.hof-level-section {
+margin-bottom: 40px;
+}
+
+.hof-current-level {
+font-size: 20px;
+font-weight: 600;
+color: #f5d97b;
+margin-bottom: 10px;
+text-shadow: 0 0 8px rgba(245, 217, 123, 0.4);
+}
+
+.hof-progress-text {
+font-size: 14px;
+margin-bottom: 8px;
+color: #aaa;
+}
+
+.hof-progress-bar {
+height: 10px;
+background: rgba(255, 255, 255, 0.05);
+border-radius: 20px;
+overflow: hidden;
+}
+
+.hof-progress-fill {
+height: 100%;
+background: linear-gradient(90deg, #f5d97b, #c9a227);
+box-shadow: 0 0 12px rgba(245, 217, 123, 0.6);
+transition: width 0.3s ease;
+}
+
+.hof-max-level {
+color: #f5d97b;
+font-weight: 600;
+margin-top: 10px;
+}
