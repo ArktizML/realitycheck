@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from app.models.user import User
 from app.security.jwt import SECRET_KEY, ALGORITHM
 from app.database import SessionLocal
+from app.services.milestone_service import get_user_level
+from app.models.event import Event
 
 def get_user_for_templates(request: Request, db: Session):
     token = request.cookies.get("access_token")
@@ -19,6 +21,11 @@ def get_user_for_templates(request: Request, db: Session):
         return None
 
     user = db.query(User).filter(User.id == user_id).first()
+
+    done_count = db.query(User).filter(User.id == int(user_id), Event.status == "done").count()
+    user_level = get_user_level(done_count)
+    user.level = user_level
+
     return user
 
 

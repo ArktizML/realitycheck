@@ -7,3 +7,6 @@ python-dotenv
 alembic
 python-jose
 passlib[argon2]
+jinja2
+python-multipart
+itsdangerous

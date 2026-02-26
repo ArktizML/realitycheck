@@ -631,3 +631,47 @@ a:hover {
     font-size: 13px;
     color: #b9a8ff;
 }
+
+.nav-user {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.nav-badge {
+padding: 4px 10px;
+font-size: 12px;
+border-radius: 20px;
+font-weight: 600;
+letter-spacing: 0.5px;
+}
+
+/* Bronze */
+.level-bronze {
+background: rgba(205, 127, 50, 0.15);
+color: #cd7f32;
+border: 1px solid rgba(205, 127, 50, 0.4);
+}
+
+/* Silver */
+.level-silver {
+background: rgba(192, 192, 192, 0.15);
+color: #c0c0c0;
+border: 1px solid rgba(192, 192, 192, 0.4);
+}
+
+/* Gold */
+.level-gold {
+background: rgba(245, 217, 123, 0.12);
+color: #f5d97b;
+border: 1px solid rgba(245, 217, 123, 0.5);
+box-shadow: 0 0 8px rgba(245, 217, 123, 0.4);
+}
+
+/* Elite */
+.level-elite {
+background: rgba(255, 215, 0, 0.15);
+color: #ffd700;
+border: 1px solid rgba(255, 215, 0, 0.6);
+box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+}
