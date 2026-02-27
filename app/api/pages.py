@@ -17,6 +17,7 @@ from app.models.user import User
 from app.utils.auth import get_user_for_templates
 from app.security.dependencies import get_current_user
 from app.services.event_engine import apply_event_action
+from app.services.milestone_service import get_user_level
 
 
 
@@ -47,7 +48,10 @@ def home(
         )
 
     stats = get_event_stats(db, user)
-    success_rate = int((stats["done"] / (stats["failed"] + stats["done"])) * 100)
+    if stats["failed"] != 0:
+        success_rate = int((stats["done"] / (stats["failed"] + stats["done"])) * 100)
+    else:
+        success_rate = 100
 
     if status:
         events = get_events_by_status(db, user, status, sort)
@@ -57,10 +61,11 @@ def home(
     count = len(events)
     planned_count = db.query(Event).filter(Event.user_id == user.id,Event.status == EventStatus.planned).count()
 
-
     notice = request.session.pop("login_notice", None)
 
     overplanning = planned_count > 5
+
+    print(get_user_level(1))
 
     return templates.TemplateResponse(
         "events.html",

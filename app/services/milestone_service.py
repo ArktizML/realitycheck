@@ -1,5 +1,6 @@
 def get_user_level(done_count: int):
     milestones = [
+        {"name": "Initiate", "required": 0, "icon": "🥚"},
         {"name": "Bronze Builder", "required": 10, "icon": "🥉"},
         {"name": "Silver Consistent", "required": 25, "icon": "🥈"},
         {"name": "Gold Finisher", "required": 50, "icon": "🥇"},

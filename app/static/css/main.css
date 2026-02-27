@@ -646,6 +646,13 @@ font-weight: 600;
 letter-spacing: 0.5px;
 }
 
+/* Initiate */
+.level-initiate{
+background: rgba(120, 120, 255, 0.1);
+color: #8c8cff;
+border: 1px solid rgba(120, 120, 255, 0.4);
+}
+
 /* Bronze */
 .level-bronze {
 background: rgba(205, 127, 50, 0.15);
