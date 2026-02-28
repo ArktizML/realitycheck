@@ -53,9 +53,9 @@
                     Logged as: {{ current_user.login }}
                 </span>
 
-                {% if current_user.level %}
-                    <span class="nav-badge level-{{ current_user.level.name|lower}}">
-                        {{ current_user.level.icon }}
+                {% if user_level %}
+                    <span class="nav-badge level-{{ user_level.name|lower}}">
+                        {{ user_level.icon }}
                     </span>
                 {% endif %}
             </div>

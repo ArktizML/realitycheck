@@ -60,12 +60,15 @@ def home(
 
     count = len(events)
     planned_count = db.query(Event).filter(Event.user_id == user.id,Event.status == EventStatus.planned).count()
+    done_count = db.query(Event).filter(Event.user_id == user.id,Event.status == EventStatus.done).count()
+
 
     notice = request.session.pop("login_notice", None)
 
     overplanning = planned_count > 5
 
-    print(get_user_level(1))
+    user_level = get_user_level(done_count)
+
 
     return templates.TemplateResponse(
         "events.html",
@@ -82,6 +85,7 @@ def home(
             "overplanning": overplanning,
             "planned_count": planned_count,
             "success_rate": success_rate,
+            "user_level": user_level,
             "today": date.today(),
         },
     )
