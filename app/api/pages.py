@@ -464,6 +464,7 @@ def hall_of_fame(request: Request, db: Session = Depends(get_db)):
     done_count = len(done_events)
 
     milestones = [
+        {"name": "Initiate", "required": 0, "icon": "🥚"},
         {"name": "Bronze Builder", "required": 10, "icon": "🥉"},
         {"name": "Silver Consistent", "required": 25, "icon": "🥈"},
         {"name": "Gold Finisher", "required": 50, "icon": "🥇"},

@@ -682,3 +682,29 @@ color: #ffd700;
 border: 1px solid rgba(255, 215, 0, 0.6);
 box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
 }
+
+.btn-hof{
+    padding: 8px 18px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    color: #f5d97a;
+    background: rgba(245, 217, 122, 0.08);
+    border: 1px solid rgba(245, 217, 122, 0.4);
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+.btn-hof:hover{
+    background: rgba(245, 217, 122, 0.15);
+    color: white !important;
+    border-color: #f5d97a;
+    box-shadow: 0 0 8px rgba(245, 217, 122, 0.6), 0 0 16px rgba(245, 217, 122, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-hof:active {
+transform: translateY(0px) scale(0.98);
+}
