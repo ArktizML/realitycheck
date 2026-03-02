@@ -708,3 +708,10 @@ box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
 .btn-hof:active {
 transform: translateY(0px) scale(0.98);
 }
+
+.add-event-button {
+background: #15163a;
+border-radius: 2px;
+border: 1px solid purple;
+color: white;
+}
