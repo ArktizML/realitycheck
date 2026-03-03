@@ -715,3 +715,32 @@ border-radius: 2px;
 border: 1px solid purple;
 color: white;
 }
+
+.badge-wrapper{
+    position: relative;
+    display: inline-block;
+}
+
+.badge-tooltip{
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+    background: rgba(20, 10, 35, 0.95);
+    color: #c9b6ff;
+    border: 1px solid rgba(150, 120, 255, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 10px rgba(120, 80, 255, 0.3);
+
+}
+
+.badge-wrapper:hover .badge-tooltip{
+opacity: 1;
+transform: translateX(-50%) translateY(4px);
+}

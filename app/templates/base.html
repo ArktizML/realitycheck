@@ -54,6 +54,14 @@
                 </span>
 
                 {% if user_level %}
+                <div class="badge-wrapper">
+                    <span class="badge badge-{{ user_level.name|lower }}">
+                        {{ user_level.name }}
+                    </span>
+                    <span class="badge-tooltip">
+                        {{ level_description }}
+                    </span>
+                </div>
                     <span class="nav-badge level-{{ user_level.name|lower}}">
                         {{ user_level.icon }}
                     </span>

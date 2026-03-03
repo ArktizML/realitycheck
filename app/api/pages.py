@@ -69,6 +69,13 @@ def home(
 
     user_level = get_user_level(done_count)
 
+    level_description = {
+        "Initiate": "Just getting started",
+        "Bronze": "10 completed goals",
+        "Silver": "25 completed goals",
+        "Gold": "50 completed goals",
+    }.get(user_level['name'], "")
+
 
     return templates.TemplateResponse(
         "events.html",
@@ -87,6 +94,7 @@ def home(
             "success_rate": success_rate,
             "user_level": user_level,
             "today": date.today(),
+            "level_description": level_description,
         },
     )
 
