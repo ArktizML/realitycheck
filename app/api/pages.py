@@ -68,6 +68,9 @@ def home(
     overplanning = planned_count > 5
 
     user_level = get_user_level(done_count)
+    overdue_count = db.query(Event).filter(Event.user_id == user.id, Event.status == "planned",
+                               Event.due_date != None,
+                               Event.due_date < date.today()).count()
 
     level_description = {
         "Initiate": "Just getting started",
@@ -94,6 +97,7 @@ def home(
             "success_rate": success_rate,
             "user_level": user_level,
             "today": date.today(),
+            "overdue_count": overdue_count,
             "level_description": level_description,
         },
     )
