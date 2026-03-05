@@ -716,10 +716,24 @@ transform: translateY(0px) scale(0.98);
 }
 
 .add-event-button {
-background: #15163a;
-border-radius: 2px;
-border: 1px solid purple;
-color: white;
+padding: 8px 18px;
+border-radius: 999px;
+text-decoration: none;
+font-size: 14px;
+font-weight: 600;
+letter-spacing: 0.5px;
+color: #e0d4ff !important;
+background: linear-gradient(135deg, rgba(120, 80, 255, 0.25), rgba(80, 40, 180, 0.35)) !important;
+border: 1px solid rgba(140, 100, 255, 0.6) !important;
+transition: all 0.25s ease;
+position: relative;
+}
+
+.add-event-button:hover{
+transform: translateY(-2px);
+color: white !important;
+box-shadow: 0 0 12px rgba(140, 100, 255, 0.6), rgba(140, 100, 255, 0.3);
+background: linear-gradient(135deg, rgba(140, 100, 255, 0.35), rgba(90, 50, 200, 0.4s)) !important;
 }
 
 .badge-wrapper{
