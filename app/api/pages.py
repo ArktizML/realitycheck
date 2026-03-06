@@ -74,9 +74,10 @@ def home(
 
     level_description = {
         "Initiate": "Just getting started",
-        "Bronze": "10 completed goals",
-        "Silver": "25 completed goals",
-        "Gold": "50 completed goals",
+        "Bronze Builder": "10 completed goals",
+        "Silver Consistent": "25 completed goals",
+        "Gold Finisher": "50 completed goals",
+        "Elite Relentless": "100 completed goals",
     }.get(user_level['name'], "")
 
 

@@ -53,13 +53,13 @@
                 {% endif %}
             <div class="nav-user">
                 <span class="nav-username">
-                    Logged as: {{ current_user.login }}
+                    <b>Logged as:</b> {{ current_user.login }}
                 </span>
 
                 {% if user_level %}
                 <div class="badge-wrapper">
                     <span class="badge badge-{{ user_level.name|lower }}">
-                        {{ user_level.name }}
+                       Rank: {{ user_level.name }}
                     </span>
                     <span class="badge-tooltip">
                         {{ level_description }}
