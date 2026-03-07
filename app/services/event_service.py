@@ -1,7 +1,7 @@
 from ctypes.wintypes import tagSIZE
 
 from app.schemas.event import EventCreate, EventRead, EventStats
-from sqlalchemy import func
+from sqlalchemy import func, case
 from datetime import datetime, date
 from app.models.event import Event, EventStatus
 from sqlalchemy.orm import Session
@@ -116,12 +116,23 @@ def get_events_asc(db: Session, user: User):
     )
 
 def get_events(db: Session, user: User, sort):
+    today = date.today()
+    overdue_priority = case(
+        (
+        (Event.status == "planned") &
+        (Event.due_date != None) &
+        (Event.due_date < today),
+        0
+        ),
+        else_=1
+    )
     query = db.query(Event).filter(Event.user_id == user.id)
 
+
     if sort == "asc":
-        query = query.order_by(Event.created_at.asc())
+        query = query.order_by(overdue_priority, Event.created_at.asc())
     else:
-        query = query.order_by(Event.created_at.desc())
+        query = query.order_by(overdue_priority, Event.created_at.desc())
 
     return query.all()
 

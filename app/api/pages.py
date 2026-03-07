@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Request, Form, HTTPException
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+from sqlalchemy import case
 from fastapi.responses import RedirectResponse, HTMLResponse
 from datetime import datetime, date
 from app.database import get_db
