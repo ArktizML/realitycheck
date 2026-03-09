@@ -1,9 +1,8 @@
 from fastapi import APIRouter, Depends, Request, Form, HTTPException
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from sqlalchemy import case
 from fastapi.responses import RedirectResponse, HTMLResponse
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from app.database import get_db
 from app.services.event_service import get_event_by_id, get_events, get_events_by_status
 from app.schemas.event import EventCreate
@@ -124,13 +123,40 @@ def create_event_from_form(
     title: str = Form(...),
     tags: str = Form(""),
     description: str = Form(None),
-    due_date: datetime = Form(None),
+    due_date: date = Form(None),
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ):
+    today = date.today()
+    max_date = today + timedelta(days=365 * 5)
+
+    if due_date:
+        if due_date < today:
+            return templates.TemplateResponse(
+                "event_form.html",
+                {
+                    "request": request,
+                    "current_user": user,
+                    "error": "Due date can not be in the past.",
+                },
+                status_code=400,
+            )
+        elif due_date > max_date:
+            return templates.TemplateResponse(
+                "event_form.html",
+                {
+                    "request": request,
+                    "current_user": user,
+                    "error": "Due date is too far in the future.",
+                },
+                status_code=400,
+            )
+        else:
+            error = None
+
     if len(title.strip()) < 3:
         return templates.TemplateResponse(
-            "event_from.html",
+            "event_form.html",
             {
                 "request": request,
                 "current_user": user,

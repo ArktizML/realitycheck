@@ -4,6 +4,9 @@
 
 <form method="post" action="/events/new" class="event-form">
     <h1>Create Event</h1>
+    {% if error %}
+    <div class="error"> {{error}}</div>
+    {% endif %}
 
     <label>Title</label>
     <input name="title"  maxlength="100" placeholder="e.g. Learn new language" required />
