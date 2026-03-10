@@ -764,3 +764,16 @@ background: linear-gradient(135deg, rgba(140, 100, 255, 0.35), rgba(90, 50, 200,
 opacity: 1;
 transform: translateX(-50%) translateY(4px);
 }
+
+.nav-clock{
+margin-left: 20px;
+padding: 6px 12px;
+border-radius: 8px;
+background: rgba(120,80,255, 0.08);
+border: 1px solid rgba(140, 100, 255, 0.25);
+color: #cdb8ff;
+font-size: 14px;
+font-weight: 500;
+letter-spacing: 1px;
+box-shadow: 0 0 8px rgba(120, 80, 255 0.2);
+}
