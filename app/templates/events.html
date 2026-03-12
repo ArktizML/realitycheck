@@ -83,9 +83,15 @@
                     {{ event.description or "No description yet." }}
                 </p>
 
-                {% if event.due_date %}
+                {% if event.due_date and event.due_date < today %}
+                <div class="event-deadline overdue-tooltip">
+                    Due: {{ event.due_date }}
+                    <span class="tooltip-text">Deadline passed</span>
+                </div><br>
+                {% elif event.due_date %}
                 <div class="event-deadline">
                     Due: {{ event.due_date }}
+
                 </div><br>
                 {% endif %}
 

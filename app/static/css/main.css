@@ -777,3 +777,34 @@ font-weight: 500;
 letter-spacing: 1px;
 box-shadow: 0 0 8px rgba(120, 80, 255 0.2);
 }
+
+.overdue-tooltip {
+position: relative;
+display: inline-block;
+
+}
+
+.tooltip-text{
+visibility: hidden;
+opacity: 0;
+
+position: absolute;
+bottom: 130%;
+left: 50%
+transform: translateX(-50%);
+
+background: #1c1c2e;
+color: #ff9aa5;
+padding: 6px 10px;
+border-radius: 6px;
+font-size: 12px;
+white-space: nowrap;
+broder 1px solid rgba(255, 90, 90, 0.3);
+transition: opacity 0.2s ease;
+box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.overdue-tooltip:hover .tooltip-text{
+visibility: visible;
+opacity: 1;
+}
