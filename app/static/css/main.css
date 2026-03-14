@@ -814,3 +814,8 @@ opacity: 0.6;
 margin-left: 6px;
 font-size: 12px;
 }
+
+.deadline-info{
+font-size: 12px;
+margin-top: 4px;
+opacity: 0.5;}

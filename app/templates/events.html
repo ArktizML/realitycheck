@@ -92,7 +92,20 @@
                 <div class="event-deadline">
                     Due: {{ event.due_date }}
 
-                </div><br>
+                </div>
+                {% set days = (event.due_date - today).days %}
+                <div class="deadline-info">
+                    {% if days > 1 %}
+                        {{ days }} days left
+                    {% elif days == 1 %}
+                        1 day left
+                    {% elif days == 0 %}
+                        Today
+                    {% else %}
+                        Overdue by {{ days * -1 }} days
+                    {% endif %}
+                </div>
+                <br>
                 {% endif %}
 
                 <div class="event-card-actions">
