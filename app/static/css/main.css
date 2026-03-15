@@ -819,3 +819,9 @@ font-size: 12px;
 font-size: 12px;
 margin-top: 4px;
 opacity: 0.5;}
+
+.deadline-info .deadline-today{
+color: #ffb347;
+font-weight: 600;
+opacity: 1 !important;
+}
