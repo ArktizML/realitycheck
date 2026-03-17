@@ -829,3 +829,13 @@ color: #ffb347;
 font-weight: 600;
 opacity: 1 !important;
 }
+
+::-webkit-scrollbar{
+width:8px;
+background: rgb(25, 25, 25);
+}
+
+::-webkit-scrollbar-thumb{
+background: #5a4b8a;
+border-radius: 10px;
+}
