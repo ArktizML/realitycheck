@@ -2,7 +2,7 @@ from ctypes.wintypes import tagSIZE
 
 from app.schemas.event import EventCreate, EventRead, EventStats
 from sqlalchemy import func, case
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from app.models.event import Event, EventStatus
 from sqlalchemy.orm import Session
 from app.db.event_repository import get_all_events, get_event_by_id, update_event, delete_event
@@ -35,6 +35,11 @@ def create_event(db: Session, event_data: EventCreate, user: User):
         user_id=user.id,
     )
 
+    due_date = event_data.due_date
+    if not due_date:
+        due_date = datetime.utcnow() + timedelta(days=7)
+
+
     if event_data.tags:
         tag_names = [t.strip() for t in event_data.tags.split(",") if t.strip()]
 
@@ -45,6 +50,8 @@ def create_event(db: Session, event_data: EventCreate, user: User):
                 db.add(tag)
                 db.flush()
             event.tags.append(tag)
+
+
     # ------------
 
     db.add(event)
