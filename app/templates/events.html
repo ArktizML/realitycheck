@@ -59,7 +59,12 @@
             {% endif %}">
 
                 <div class="event-card-header">
-                    <h3>{{ event.title }}</h3>
+                    <h3>{{ event.title }}
+
+                    {% if event.created_at > one_day_ago %}
+                        <span class="new-badge">NEW</span>
+                    {% endif %}
+                    </h3>
                     <span class="status-badge {{ event.status.value }}">
                         {{ event.status.value|upper }}
                     </span>

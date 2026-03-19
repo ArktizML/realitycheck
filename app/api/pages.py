@@ -80,6 +80,8 @@ def home(
         "Elite Relentless": "100 completed goals",
     }.get(user_level['name'], "")
 
+    one_day_ago = datetime.utcnow() - timedelta(days=1)
+
 
     return templates.TemplateResponse(
         "events.html",
@@ -100,6 +102,8 @@ def home(
             "today": date.today(),
             "overdue_count": overdue_count,
             "level_description": level_description,
+            "now": datetime.utcnow(),
+            "one_day_ago": one_day_ago,
         },
     )
 

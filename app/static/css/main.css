@@ -839,3 +839,17 @@ background: rgb(25, 25, 25);
 background: #5a4b8a;
 border-radius: 10px;
 }
+
+.new-badge{
+font-size: 10px;
+font-weight: 600;
+color: #a78bfa;
+
+margin-left: 8px;
+padding: 2px 6px;
+
+border: 1px solid rgba(167, 139, 250, 0.4);
+border-radius: 6px;
+
+background: rgba(167, 139, 250, 0.1);
+}
