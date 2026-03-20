@@ -156,6 +156,7 @@ body {
 
 .event-card {
     background: #0f172a;
+    cursor: pointer;
     border-radius: 16px;
     padding: 18px;
     transition: 0.3s;
