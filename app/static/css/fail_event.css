@@ -50,6 +50,15 @@
     letter-spacing: 1px;
 }
 
+.badge.replanned {
+    background: rgba(34, 197, 94, 0.2);
+    color: #86efac;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+}
+
 .preview-progress {
     margin-top: 15px;
     display: flex;
@@ -123,5 +132,3 @@
     color: #ccc;
     text-decoration: none;
 }
-
-

@@ -157,6 +157,10 @@ def get_event_stats(db: Session, user: User):
                 Event.user_id == user.id,
                 Event.status == EventStatus.failed
             ).count(),
+            "replanned": db.query(Event).filter(
+                Event.user_id == user.id,
+                Event.status == EventStatus.replanned
+            ).count(),
         }
 
 def get_events_by_status(db, user, status, sort):

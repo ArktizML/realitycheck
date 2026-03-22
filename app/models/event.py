@@ -10,11 +10,13 @@ class EventStatus(str, enum.Enum):
     planned = "planned"
     done = "done"
     failed = "failed"
+    replanned = "replanned"
 
 class EventAction(str, enum.Enum):
     update_progress = "update_progress"
     mark_done = "mark_done"
     mark_failed = "mark_failed"
+    mark_replanned = "mark_replanned"
     reset_to_planned = "reset_to_planned"
 
 class Event(Base):

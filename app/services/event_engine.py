@@ -24,6 +24,11 @@ def apply_event_action(
         event.progress = 100
         event.completed_at = datetime.utcnow()
 
+    elif action == EventAction.mark_replanned:
+        event.status = EventStatus.replanned
+        event.progress = 0
+        event.completed_at = None
+
     elif action == EventAction.mark_failed:
         note = payload.get("failure_note")
 

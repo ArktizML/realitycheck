@@ -544,3 +544,88 @@ def hall_of_fame(request: Request, db: Session = Depends(get_db)):
             "next_milestone": next_milestone,
         }
     )
+
+@router.get("/events/{event_id}/replan", response_class=HTMLResponse)
+def replan_event_page(
+    request: Request,
+    event_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    event = (
+        db.query(Event)
+        .filter(Event.id == event_id, Event.user_id == user.id)
+        .first()
+    )
+
+    if not event:
+        raise HTTPException(status_code=404)
+
+    if event.status != EventStatus.failed:
+        raise HTTPException(status_code=400, detail="Event must be failed to replan")
+
+    return templates.TemplateResponse(
+        "replan_event.html",
+        {
+            "request": request,
+            "event": event,
+            "current_user": user,
+        },
+    )
+
+@router.post("/events/{event_id}/replan")
+def replan_event(
+    event_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    event = (
+        db.query(Event)
+        .filter(Event.id == event_id, Event.user_id == user.id)
+        .first()
+    )
+
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    if event.status != EventStatus.failed:
+        raise HTTPException(status_code=400, detail="Event must be failed to replan")
+
+    apply_event_action(
+        event,
+        EventAction.mark_replanned,
+        {}
+    )
+
+    db.commit()
+    db.refresh(event)
+
+    return RedirectResponse("/", status_code=303)
+
+@router.get("/events/{event_id}/failure_note", response_class=HTMLResponse)
+def failure_note_page(
+    request: Request,
+    event_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    event = (
+        db.query(Event)
+        .filter(Event.id == event_id, Event.user_id == user.id)
+        .first()
+    )
+
+    if not event:
+        raise HTTPException(status_code=404)
+
+    if not event.failure_note:
+        raise HTTPException(status_code=404, detail="No failure note available")
+
+    return templates.TemplateResponse(
+        "failure_note.html",
+        {
+            "request": request,
+            "event": event,
+            "current_user": user,
+        },
+    )

@@ -41,6 +41,9 @@
         <a href="/?status=failed&sort={{ sort }}"
            class="{{ 'active' if status == 'failed' else '' }}">Failed</a>
 
+        <a href="/?status=replanned&sort={{ sort }}"
+           class="{{ 'active' if status == 'replanned' else '' }}">Replanned</a>
+
         <a href="/?status=overdue&sort={{ sort }}"
            class="{{ 'active' if status == 'overdue' else '' }}">Overdue</a>
 
@@ -115,6 +118,12 @@
                 <div class="event-card-actions">
                     <a href="/events/{{ event.id }}" class="btn view">🔎 View</a>
                     <a href="/events/{{ event.id }}/edit" class="btn edit">✏️ Edit</a>
+                    {% if event.status.value == 'failed' %}
+                    <a href="/events/{{ event.id }}/replan" class="btn replan">🔄 Replan</a>
+                    {% endif %}
+                    {% if event.status.value == 'replanned' %}
+                    <a href="/events/{{ event.id }}/failure_note" class="btn note">📝 Note</a>
+                    {% endif %}
                 </div>
 
             </div>
