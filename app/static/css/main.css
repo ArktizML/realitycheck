@@ -132,6 +132,11 @@ color: #9ca3af;
 box-shadow: 0 0 6px rgba(156, 163, 175, 0.4);
 }
 
+.dash-item.replanned {
+color: #7c3aed;
+box-shadow: 0 0 6px rgba(124, 58, 237, 0.4);
+}
+
 
 .dash-item.done {
 color: #4ade80;
