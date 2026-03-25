@@ -212,12 +212,17 @@ def update_event_from_form(
     title: str = Form(...),
     status: str =Form(default="planned"),
     description: str = Form(None),
+    due_date: date = Form(None),
     progress: int = Form(...),
     failure_note: str = Form(None),
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
     completed_at: datetime = Form(None)
 ):
+
+    if not due_date:
+        due_date =  date.today() + timedelta(days=7)
+
     if progress < 0 or progress > 100:
         raise HTTPException(status_code=400, detail="Invalid progress")
 
@@ -238,6 +243,7 @@ def update_event_from_form(
         description=description,
         progress=progress,
         status=status,
+        due_date=due_date,
         failure_note=failure_note,
         completed_at=completed_at
     )

@@ -25,19 +25,21 @@ def calculate_gap(expectation: int, reality: int) -> int:
 
 
 def create_event(db: Session, event_data: EventCreate, user: User):
+    due_date = event_data.due_date
+    if not due_date:
+        due_date = datetime.utcnow() + timedelta(days=7)
+
     event = Event(
         title=event_data.title,
         description=event_data.description,
         progress=0,
         status="planned",
         completed_at=None,
-        due_date=event_data.due_date,
+        due_date=due_date,
         user_id=user.id,
     )
 
-    due_date = event_data.due_date
-    if not due_date:
-        due_date = datetime.utcnow() + timedelta(days=7)
+
 
 
     if event_data.tags:

@@ -5,10 +5,15 @@
 <div class="event-detail-container">
 
     <div class="event-header">
-        <h1>{{ event.title }}</h1>
+        <div class="event-header-left">
+        <h1>{{ event.title }}</h1><br>
+        {% for tag in event.tags %}
+            <span class="tag-pill">{{ tag.name }}</span>
+        {% endfor %}</div>
         <div class="event-meta">
             <span class="status {{ event.status }}">{{ event.status|upper }}</span>
             <span class="date">Created: {{ event.created_at.strftime("%d %b %Y") }}</span>
+            <span class="date">Due: {{ event.due_date.strftime("%d %b %Y") if event.due_date else "No deadline" }}</span>
         </div>
     </div>
 

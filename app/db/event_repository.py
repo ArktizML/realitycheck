@@ -3,7 +3,7 @@ from app.models.event import Event
 from app.models.user import User
 from app.security.dependencies import get_current_user
 from fastapi import Depends, HTTPException, status
-from datetime import datetime
+from datetime import datetime, date
 from app.models.event import EventStatus
 from app.models.event_history import EventHistory
 
@@ -20,6 +20,7 @@ def update_event(
     user: User,
     progress: int,
     status: str,
+    due_date: date,
     description: str,
     failure_note: str | None = None,
     completed_at: datetime | None = None,
@@ -49,6 +50,7 @@ def update_event(
     event.title = title
     event.progress = progress
     event.status = status
+    event.due_date = due_date
     event.description = description
     event.completed_at = completed_at
 

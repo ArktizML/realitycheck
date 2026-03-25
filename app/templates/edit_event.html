@@ -22,6 +22,11 @@
             <textarea name="description" maxlength="500" rows="4" placeholder="e.g. Learn deutsch to B1 state in 3 months">{{ event.description or "" }}</textarea>
         </div>
 
+        <div class="field">
+            <label><strong>Deadline</strong></label>
+            <input type="date" name="due_date" value="{{ event.due_date.strftime('%Y-%m-%d') if event.due_date else '' }}">
+        </div>
+
         <div class="progress-wrapper">
         <label><strong>Progress</strong></label>
 
