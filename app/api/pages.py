@@ -214,6 +214,7 @@ def update_event_from_form(
     description: str = Form(None),
     due_date: date = Form(None),
     progress: int = Form(...),
+    tags: str = Form(None),
     failure_note: str = Form(None),
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
@@ -226,14 +227,23 @@ def update_event_from_form(
     if progress < 0 or progress > 100:
         raise HTTPException(status_code=400, detail="Invalid progress")
 
+    event = db.query(Event).filter(Event.id == event_id, Event.user_id == user.id).first()
+
+
+    # keep current status unless explicitly changed
+    current_status = event.status
 
     if progress >= 100:
         status = "done"
         completed_at = datetime.utcnow()
     else:
-        if status == "done":
-            status = "planned"
+        # if it was done before, revert to previous logical state
+        if current_status == "done":
+            status = "planned"  # or "replanned" depending on your logic
             completed_at = None
+        else:
+            # preserve status (e.g. replanned)
+            status = current_status
 
     update_event(
         db=db,
@@ -243,6 +253,7 @@ def update_event_from_form(
         description=description,
         progress=progress,
         status=status,
+        tags=tags,
         due_date=due_date,
         failure_note=failure_note,
         completed_at=completed_at

@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from app.services.tag_service import update_event_tags
 from app.models.event import Event
 from app.models.user import User
 from app.security.dependencies import get_current_user
@@ -20,11 +21,14 @@ def update_event(
     user: User,
     progress: int,
     status: str,
-    due_date: date,
-    description: str,
+    tags: str | None = None,
+    due_date: datetime | None = None,
+    description: str | None = None,
     failure_note: str | None = None,
     completed_at: datetime | None = None,
 ):
+    from app.services.event_service import get_previous_status
+
     event = (
         db.query(Event)
         .filter(Event.id == event_id, Event.user_id == user.id)
@@ -33,17 +37,35 @@ def update_event(
 
     old_progress = event.progress
 
+    if tags is not None:
+        update_event_tags(db, event, tags)
+
+
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
-    if event.progress == 100:
-        event.status = EventStatus.done
-        if event.completed_at is None:
-            event.completed_at = datetime.utcnow()
+    if progress >= 100:
+        if event.status != "done":
+            # save history BEFORE changing
+            history = EventHistory(
+                event_id=event.id,
+                user_id=user.id,
+                field="status",
+                old_value=event.status.value if hasattr(event.status, "value") else str(event.status),
+                new_value="done",
+                changed_at=datetime.utcnow(),
+            )
+            db.add(history)
+
+        event.status = "done"
+        event.completed_at = datetime.utcnow()
+
     else:
-        if event.status == EventStatus.done:
-            event.status = EventStatus.planned
-        event.completed_at = None
+        if event.status == "done":
+            # revert to previous status from history
+            previous_status = get_previous_status(db, event.id)
+            event.status = previous_status
+            event.completed_at = None
 
 
 
@@ -53,7 +75,6 @@ def update_event(
     event.due_date = due_date
     event.description = description
     event.completed_at = completed_at
-
 
     new_progress = event.progress
     if status == "failed":

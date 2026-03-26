@@ -7,7 +7,7 @@ from app.models.event import Event, EventStatus
 from sqlalchemy.orm import Session
 from app.db.event_repository import get_all_events, get_event_by_id, update_event, delete_event
 from app.models.user import User
-from app.models.tag import Tag
+from app.models.event_history import EventHistory
 
 
 def list_events(db: Session) -> list[EventRead]:
@@ -25,6 +25,7 @@ def calculate_gap(expectation: int, reality: int) -> int:
 
 
 def create_event(db: Session, event_data: EventCreate, user: User):
+    from app.models.tag import Tag
     due_date = event_data.due_date
     if not due_date:
         due_date = datetime.utcnow() + timedelta(days=7)
@@ -184,3 +185,21 @@ def get_events_by_status(db, user, status, sort):
         q = q.order_by(Event.created_at.desc())
 
     return q.all()
+
+def get_previous_status(db: Session, event_id: int):
+    # get last status change before "done"
+    history = (
+        db.query(EventHistory)
+        .filter(
+            EventHistory.event_id == event_id,
+            EventHistory.field == "status"
+        )
+        .order_by(EventHistory.changed_at.desc())
+        .all()
+    )
+
+    for record in history:
+        if record.old_value != "done":
+            return record.old_value
+
+    return "planned"  # fallback

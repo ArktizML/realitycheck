@@ -27,6 +27,11 @@
             <input type="date" name="due_date" value="{{ event.due_date.strftime('%Y-%m-%d') if event.due_date else '' }}">
         </div>
 
+        <div class="field">
+            <label><strong>Tag</strong></label>
+            <input type="text" name="tags" value="{{ event.tags | map(attribute='name') | join(', ') }}" placeholder="Job, Health, Money...">
+        </div>
+
         <div class="progress-wrapper">
         <label><strong>Progress</strong></label>
 
