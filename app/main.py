@@ -24,6 +24,8 @@ app.include_router(auth_router)
 app.include_router(pages.router)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
+
+
 @app.get("/health")
 def health():
     return {"status": "ok"}

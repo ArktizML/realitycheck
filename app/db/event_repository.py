@@ -71,10 +71,8 @@ def update_event(
 
     event.title = title
     event.progress = progress
-    event.status = status
     event.due_date = due_date
     event.description = description
-    event.completed_at = completed_at
 
     new_progress = event.progress
     if status == "failed":
@@ -83,8 +81,8 @@ def update_event(
     history = EventHistory(
         event_id=event.id,
         user_id=user.id,
-        old_value=old_progress,
-        new_value=new_progress,
+        old_value=str(old_progress),
+        new_value=str(new_progress),
         field="Progress",
         changed_at=datetime.utcnow(),
     )
