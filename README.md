@@ -20,9 +20,6 @@ A productivity web app built with FastAPI that helps users track goals, deadline
 - Jinja2
 - SQLite
 - HTML / CSS
-
-## Future Improvements
-
 - Progress tracking
 - Statistics dashboard
 - Goal categories
