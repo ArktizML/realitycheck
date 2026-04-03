@@ -1,4 +1,4 @@
-# 🚀 Goal Tracker App
+# 🚀 RealityCheck - Goal Tracker App
 
 A productivity-focused web application built with **FastAPI** that helps users manage goals, track progress, and stay consistent using a simple motivational system.
 
@@ -62,6 +62,7 @@ After logging in, the user lands on the main dashboard.
   - `replanned`
   - `done`
   - `failed`
+  - `overdue`
 - Due date + remaining days
 - "NEW" badge (if created within 24h)
 
