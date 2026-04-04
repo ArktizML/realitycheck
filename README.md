@@ -168,6 +168,7 @@ A separate page showing:
 - Jinja2 Templates
 - HTML5
 - CSS (custom dark theme)
+- Bootstrap
 
 ---
 
