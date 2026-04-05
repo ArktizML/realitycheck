@@ -208,7 +208,6 @@ This project was built to:
 
 ## 🚧 Future Improvements
 
-- Docker support
 - Code refactor (modular services)
 - Improved UI feedback (animations, tooltips)
 - Extended analytics
