@@ -1,8 +1,7 @@
-FROM ubuntu:latest
-LABEL authors="matil"
-
 # Use official Python image
 FROM python:3.11-slim
+
+LABEL authors="matil"
 
 # Set working directory
 WORKDIR /app
@@ -20,6 +19,4 @@ COPY . .
 EXPOSE 8000
 
 # Run app
-CMD ["python -m uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-
-ENTRYPOINT ["top", "-b"]
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
