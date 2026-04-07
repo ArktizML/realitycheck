@@ -19,4 +19,4 @@ COPY . .
 EXPOSE 8000
 
 # Run app
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "until alembic upgrade head; do echo 'Migration failed, retrying...'; sleep 1; done && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"]
