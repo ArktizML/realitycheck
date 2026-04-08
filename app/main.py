@@ -10,7 +10,8 @@ from starlette.middleware.sessions import SessionMiddleware
 
 
 
-Base.metadata.create_all(bind=engine)
+# Migracje są zarządzane przez Alembic, nie tworzymy tabel tutaj
+# Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="RealityCheck API")
 app.add_middleware(RateLimitMiddleware)

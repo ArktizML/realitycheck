@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Request, Form, HTTPException
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse, HTMLResponse
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, UTC
 from app.database import get_db
 from app.services.event_service import get_event_by_id, get_events, get_events_by_status
 from app.schemas.event import EventCreate
@@ -17,10 +17,6 @@ from app.models.user import User
 from app.utils.auth import get_user_for_templates
 from app.security.dependencies import get_current_user
 from app.services.milestone_service import get_user_level
-
-
-
-import os
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
@@ -41,7 +37,7 @@ def home(
 
 
     if not user:
-        return templates.TemplateResponse(name="landing.html", context={"request": request,
+        return templates.TemplateResponse(name="landing.html", context={
                 "current_user": None,
             }, request=request)
 
@@ -78,10 +74,10 @@ def home(
         "Elite Relentless": "100 completed goals",
     }.get(user_level['name'], "")
 
-    one_day_ago = datetime.utcnow() - timedelta(days=1)
+    one_day_ago = datetime.now(UTC) - timedelta(days=1)
 
 
-    return templates.TemplateResponse(name="events.html", context={"request": request,
+    return templates.TemplateResponse(name="events.html", context={
             "current_user": user,
             "events": events,
             "count": count,
@@ -97,7 +93,7 @@ def home(
             "today": date.today(),
             "overdue_count": overdue_count,
             "level_description": level_description,
-            "now": datetime.utcnow(),
+            "now": datetime.now(UTC),
             "one_day_ago": one_day_ago,
         }, request=request)
 
@@ -107,10 +103,9 @@ def home(
 def new_event_form(request: Request, db: Session = Depends(get_db)):
     user = get_user_for_templates(request, db)
 
-    return templates.TemplateResponse(name="event_form.html", context={"request": request,
+    return templates.TemplateResponse(name="event_form.html", context={
             "current_user": user,
-        }
-    )
+        }, request=request)
 
 @router.post("/events/new")
 def create_event_from_form(
@@ -127,27 +122,30 @@ def create_event_from_form(
 
     if due_date:
         if due_date < today:
-            return templates.TemplateResponse(name="event_form.html", context={"request": request,
+            return templates.TemplateResponse(name="event_form.html", context={
                     "current_user": user,
                     "error": "Due date can not be in the past.",
                 },
+                request=request,
                 status_code=400,
             )
         elif due_date > max_date:
-            return templates.TemplateResponse(name="event_form.html", context={"request": request,
+            return templates.TemplateResponse(name="event_form.html", context={
                     "current_user": user,
                     "error": "Due date is too far in the future.",
                 },
+                request=request,
                 status_code=400,
             )
         else:
             error = None
 
     if len(title.strip()) < 3:
-        return templates.TemplateResponse(name="event_form.html", context={"request": request,
+        return templates.TemplateResponse(name="event_form.html", context={
                 "current_user": user,
                 "error": "Title must be at least 3 characters.",
             },
+            request=request,
             status_code=400,
         )
 
@@ -178,7 +176,7 @@ def edit_event_page(
     if not event:
         raise HTTPException(status_code=404)
 
-    return templates.TemplateResponse(name="edit_event.html", context={"request": request,
+    return templates.TemplateResponse(name="edit_event.html", context={
             "current_user": user,
             "event": event,
         }, request=request)
@@ -213,7 +211,7 @@ def update_event_from_form(
 
     if progress >= 100:
         status = "done"
-        completed_at = datetime.utcnow()
+        completed_at = datetime.now(UTC)
     else:
         # if it was done before, revert to previous logical state
         if current_status == "done":
@@ -248,11 +246,10 @@ def event_detail(request: Request, event_id: int, db: Session = Depends(get_db))
         raise HTTPException(status_code=404, detail="Event not found")
 
     user = get_user_for_templates(request, db)
-    return templates.TemplateResponse(name="event_detail.html", context={"request": request,
+    return templates.TemplateResponse(name="event_detail.html", context={
             "current_user": user,
             "event": event
-        }
-    )
+        }, request=request)
 
 @router.post("/events/{event_id}/delete")
 def delete_event_page(
@@ -267,7 +264,7 @@ def delete_event_page(
 @router.get("/login", response_class=HTMLResponse)
 def login_page(request: Request, db: Session = Depends(get_db)):
     user = get_user_for_templates(request, db)
-    return templates.TemplateResponse(name="login.html", context={"request": request,
+    return templates.TemplateResponse(name="login.html", context={
          "current_user": user}, request=request)
 
 
@@ -283,7 +280,8 @@ async def login_form(
 
     user = authenticate_user(db, login, password)
     if not user:
-        return templates.TemplateResponse(name="login.html", context={"request": request, "error": "Invalid credentials"},
+        return templates.TemplateResponse(name="login.html", context={"error": "Invalid credentials"},
+            request=request,
             status_code=401,
         )
 
@@ -300,9 +298,7 @@ async def login_form(
 
 @router.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
-    return templates.TemplateResponse(
-        "register.html",
-        {"request": request}, request=request)
+    return templates.TemplateResponse(name="register.html", context={}, request=request)
 
 
 @router.post("/register")
@@ -315,9 +311,10 @@ async def register_form(
     password = form.get("password")
 
     if db.query(User).filter(User.login == login).first():
-        return templates.TemplateResponse(name="register.html", context={"request": request,
+        return templates.TemplateResponse(name="register.html", context={
                 "error": "Login already exists",
             },
+            request=request,
             status_code=400,
         )
 
@@ -348,7 +345,7 @@ def fail_event_page(
     if not event:
         raise HTTPException(status_code=404)
 
-    return templates.TemplateResponse(name="fail_event.html", context={"request": request,
+    return templates.TemplateResponse(name="fail_event.html", context={
             "event": event,
             "current_user": user,
             "error": None,
@@ -373,24 +370,26 @@ def mark_event_failed(
         raise HTTPException(status_code=404, detail="Event not found")
 
     if len(failure_note.strip()) < 5:
-        return templates.TemplateResponse(name="fail_event.html", context={"request": request,
+        return templates.TemplateResponse(name="fail_event.html", context={
                 "event": event,
                 "current_user": user,
                 "error": "Failure description is too short. (Min. 5 characters)",
             },
+            request=request,
             status_code=400,
         )
     if event.progress == 100:
-        return templates.TemplateResponse(name="fail_event.html", context={"request": request,
+        return templates.TemplateResponse(name="fail_event.html", context={
                 "event": event,
                 "current_user": user,
                 "error": "Can't fail if progress is 100%.",
             },
+            request=request,
             status_code=400,
         )
 
     old_status = event.status
-    event.status = "failed"
+    event.status = EventStatus.failed
     event.failure_note = failure_note
     new_status = event.status
     history = EventHistory(
@@ -399,7 +398,7 @@ def mark_event_failed(
         old_value=old_status,
         new_value=new_status,
         field="Status",
-        changed_at=datetime.utcnow(),
+        changed_at=datetime.now(UTC),
     )
     db.add(history)
 
@@ -407,27 +406,6 @@ def mark_event_failed(
     db.commit()
 
     return RedirectResponse("/", status_code=303)
-
-@router.post("/events/{event_id}/progress")
-def update_progress(
-    event_id: int,
-    progress: int = Form(...),
-    db: Session = Depends(get_db),
-    user: User = Depends(get_current_user),
-):
-    event = get_event_by_id(db, event_id, user)
-
-
-    apply_event_action(
-        event,
-        EventAction.update_progress,
-        {"progress": progress}
-    )
-
-    db.commit()
-
-    db.refresh(event)
-    return RedirectResponse(f"/events/{event_id}", 303)
 
 @router.post("/events/{event_id}/done")
 def mark_event_done(
@@ -445,7 +423,7 @@ def mark_event_done(
         raise HTTPException(status_code=404)
     old_status = event.status
     event.status = EventStatus.done
-    event.completed_at = datetime.utcnow()
+    event.completed_at = datetime.now(UTC)
     new_status = event.status
 
     history = EventHistory(
@@ -454,7 +432,7 @@ def mark_event_done(
         old_value=old_status,
         new_value=new_status,
         field="Status",
-        changed_at=datetime.utcnow(),
+        changed_at=datetime.now(UTC),
     )
 
     db.add(history)
@@ -466,9 +444,7 @@ def mark_event_done(
     return RedirectResponse("/", status_code=303)
 
 @router.get("/hall-of-fame", response_class=HTMLResponse)
-def hall_of_fame(request: Request, db: Session = Depends(get_db)):
-
-    user = get_current_user(request, db)
+def hall_of_fame(request: Request, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
 
     if not user:
         return RedirectResponse(url="/login")
@@ -501,10 +477,10 @@ def hall_of_fame(request: Request, db: Session = Depends(get_db)):
     remaining = 0
 
     if next_milestone:
-        progress_percent = int((done_count / next_milestone["required"]) * 100)
-        remaining = next_milestone["required"] - done_count
+        progress_percent = int((done_count / next_milestone.get("required", 1)) * 100)
+        remaining = next_milestone.get("required", 0) - done_count
 
-    return templates.TemplateResponse(name="hall_of_fame.html", context={"request": request,
+    return templates.TemplateResponse(name="hall_of_fame.html", context={
             "current_user": user,
             "done_events": done_events,
             "done_count": done_count,
@@ -512,8 +488,7 @@ def hall_of_fame(request: Request, db: Session = Depends(get_db)):
             "progress_percent": progress_percent,
             "remaining": remaining,
             "next_milestone": next_milestone,
-        }
-    )
+        }, request=request)
 
 @router.get("/events/{event_id}/replan", response_class=HTMLResponse)
 def replan_event_page(
@@ -534,7 +509,7 @@ def replan_event_page(
     if event.status != EventStatus.failed:
         raise HTTPException(status_code=400, detail="Event must be failed to replan")
 
-    return templates.TemplateResponse(name="replan_event.html", context={"request": request,
+    return templates.TemplateResponse(name="replan_event.html", context={
             "event": event,
             "current_user": user,
         }, request=request)
@@ -557,12 +532,20 @@ def replan_event(
     if event.status != EventStatus.failed:
         raise HTTPException(status_code=400, detail="Event must be failed to replan")
 
-    apply_event_action(
-        event,
-        EventAction.mark_replanned,
-        {}
+    old_status = event.status
+    event.status = EventStatus.replanned
+    event.progress = 0
+    new_status = event.status
+    
+    history = EventHistory(
+        event_id=event.id,
+        user_id=user.id,
+        old_value=old_status,
+        new_value=new_status,
+        field="Status",
+        changed_at=datetime.now(UTC),
     )
-
+    db.add(history)
     db.commit()
     db.refresh(event)
 
@@ -587,7 +570,7 @@ def failure_note_page(
     if not event.failure_note:
         raise HTTPException(status_code=404, detail="No failure note available")
 
-    return templates.TemplateResponse(name="failure_note.html", context={"request": request,
+    return templates.TemplateResponse(name="failure_note.html", context={
             "event": event,
             "current_user": user,
         }, request=request)
