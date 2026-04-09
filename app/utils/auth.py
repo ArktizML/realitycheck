@@ -22,7 +22,7 @@ def get_user_for_templates(request: Request, db: Session):
 
     user = db.query(User).filter(User.id == user_id).first()
 
-    done_count = db.query(User).filter(User.id == int(user_id), Event.status == "done").count()
+    done_count = db.query(Event).filter(Event.user_id == int(user_id), Event.status == "done").count()
     user_level = get_user_level(done_count)
     user.level = user_level
 

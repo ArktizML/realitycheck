@@ -271,11 +271,10 @@ def login_page(request: Request, db: Session = Depends(get_db)):
 @router.post("/login")
 async def login_form(
     request: Request,
+    login: str = Form(...),
+    password: str = Form(...),
     db: Session = Depends(get_db),
 ):
-    form = await request.form()
-    login = form.get("login")
-    password = form.get("password")
     request.session["login_notice"] = "Remember to update your planned goals."
 
     user = authenticate_user(db, login, password)
@@ -304,11 +303,10 @@ def register_page(request: Request):
 @router.post("/register")
 async def register_form(
     request: Request,
+    login: str = Form(...),
+    password: str = Form(...),
     db: Session = Depends(get_db),
 ):
-    form = await request.form()
-    login = form.get("login")
-    password = form.get("password")
 
     if db.query(User).filter(User.login == login).first():
         return templates.TemplateResponse(name="register.html", context={
