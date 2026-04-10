@@ -63,7 +63,7 @@
                 <div class="event-card-header">
                     <h3>{{ event.title }}
 
-                    {% if event.created_at > one_day_ago %}
+                    {% if event.created_at.replace(tzinfo=None) > one_day_ago.replace(tzinfo=None) %}
                         <span class="new-badge">NEW</span>
                     {% endif %}
                     </h3>

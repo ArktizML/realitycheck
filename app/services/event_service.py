@@ -1,8 +1,6 @@
-from ctypes.wintypes import tagSIZE
-
 from app.schemas.event import EventCreate, EventRead, EventStats
 from sqlalchemy import func, case
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, UTC
 from app.models.event import Event, EventStatus
 from sqlalchemy.orm import Session
 from app.db.event_repository import get_all_events, get_event_by_id, update_event, delete_event
@@ -28,7 +26,7 @@ def create_event(db: Session, event_data: EventCreate, user: User):
     from app.models.tag import Tag
     due_date = event_data.due_date
     if not due_date:
-        due_date = datetime.utcnow() + timedelta(days=7)
+        due_date = datetime.now(UTC) + timedelta(days=7)
 
     event = Event(
         title=event_data.title,
@@ -106,7 +104,7 @@ def event_stats(db: Session) -> EventStats:
         average_gap=float(average_gap),
         max_gap=max_gap,
         min_gap=min_gap,
-        created_at=datetime.utcnow()
+        created_at=datetime.now(UTC)
     )
 
 def get_events_desc(db: Session, user: User):

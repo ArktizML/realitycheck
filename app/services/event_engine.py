@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, UTC
 from fastapi import HTTPException
 from app.models.event import Event, EventStatus, EventAction
 
@@ -17,12 +17,12 @@ def apply_event_action(
 
         if progress >= 100:
             event.status = EventStatus.done
-            event.completed_at = datetime.utcnow()
+            event.completed_at = datetime.now(UTC)
 
     elif action == EventAction.mark_done:
         event.status = EventStatus.done
         event.progress = 100
-        event.completed_at = datetime.utcnow()
+        event.completed_at = datetime.now(UTC)
 
     elif action == EventAction.mark_replanned:
         event.status = EventStatus.replanned

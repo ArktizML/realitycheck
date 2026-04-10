@@ -3,7 +3,7 @@ from sqlalchemy import Enum as SQLEnum
 import enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
-from datetime import datetime
+from datetime import datetime, UTC
 
 
 class EventStatus(str, enum.Enum):
@@ -26,7 +26,7 @@ class Event(Base):
     title: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str] = mapped_column(String(100), nullable=True)
     progress: Mapped[int] = mapped_column(Integer, default=0)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(UTC))
     status: Mapped[EventStatus] = mapped_column(SQLEnum(EventStatus), default=EventStatus.planned)
     completed_at: Mapped[datetime | None] = mapped_column(nullable=True)
     due_date: Mapped[datetime | None] = mapped_column(Date, nullable=True)

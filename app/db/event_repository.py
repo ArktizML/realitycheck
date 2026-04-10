@@ -4,7 +4,7 @@ from app.models.event import Event
 from app.models.user import User
 from app.security.dependencies import get_current_user
 from fastapi import Depends, HTTPException, status
-from datetime import datetime, date
+from datetime import datetime, UTC, date
 from app.models.event_history import EventHistory
 
 def get_all_events(db: Session, current_user: User = Depends(get_current_user)) -> list[Event]:
@@ -52,12 +52,12 @@ def update_event(
                 field="status",
                 old_value=event.status.value if hasattr(event.status, "value") else str(event.status),
                 new_value="done",
-                changed_at=datetime.utcnow(),
+                changed_at=datetime.now(UTC),
             )
             db.add(history)
 
         event.status = "done"
-        event.completed_at = datetime.utcnow()
+        event.completed_at = datetime.now(UTC)
 
     else:
         if event.status == "done":
@@ -83,7 +83,7 @@ def update_event(
         old_value=str(old_progress),
         new_value=str(new_progress),
         field="Progress",
-        changed_at=datetime.utcnow(),
+        changed_at=datetime.now(UTC),
     )
     db.add(history)
 

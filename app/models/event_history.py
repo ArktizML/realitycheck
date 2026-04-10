@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from datetime import datetime, UTC
 from app.database import Base
 
 
@@ -15,6 +15,6 @@ class EventHistory(Base):
     old_value = Column(String)
     new_value = Column(String)
 
-    changed_at = Column(DateTime, default=datetime.utcnow)
+    changed_at = Column(DateTime, default=lambda: datetime.now(UTC))
 
     event = relationship("Event", back_populates="history")
