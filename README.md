@@ -163,6 +163,7 @@ A separate page showing:
 - SQLAlchemy
 - PostgreSQL
 - Alembic
+- Docker
 
 ### Frontend
 - Jinja2 Templates
