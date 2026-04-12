@@ -24,7 +24,6 @@ TestingSessionLocal = sessionmaker(
 def db_session():
     engine = create_engine("sqlite:///:memory:", echo=False)
 
-    import app.models.user
     Base.metadata.create_all(bind=engine)
 
 
