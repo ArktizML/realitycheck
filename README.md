@@ -29,7 +29,7 @@ It’s designed as a **portfolio project** to demonstrate backend logic, databas
 
 ## 🏠 Main Dashboard
 
-After logging in, the user lands on the main dashboard.
+After logging in, user lands on the main dashboard.
 
 ### Navbar includes:
 - 🕒 Current time, date, and weekday
