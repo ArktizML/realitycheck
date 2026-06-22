@@ -8,7 +8,7 @@ A productivity-focused web application built with **FastAPI** that helps users m
 
 This app allows users to:
 - create and manage goals (events)
-- track progress (0–100%)
+- track progress
 - monitor deadlines and overdue tasks
 - analyze performance through stats and a level system
 
