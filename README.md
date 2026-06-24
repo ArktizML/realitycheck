@@ -56,7 +56,7 @@ After logging in, user lands on the main dashboard.
 - Title
 - Description
 - Tags (many-to-many)
-- Progress bar (0–100%)
+- Progress bar (->100%)
 - Status:
   - `planned`
   - `replanned`
