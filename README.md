@@ -19,7 +19,7 @@ It’s designed as a **portfolio project** to demonstrate backend logic, databas
 ## 🔐 Authentication
 
 - User registration & login
-- JWT-based authentication
+- JWT authentication
 - Session handling for protected routes
 
 <img width="957" height="422" alt="{B7DC0384-9DC1-4E0A-A83C-F6002C06DE92}" src="https://github.com/user-attachments/assets/4a5a590c-2966-457c-95ec-6262e7d43ed5" />
